@@ -1,0 +1,18 @@
+{
+  "name": "Simple-HTML-JS-framework",
+  "version": "0.1.0",
+  "description": "",
+  "repository": "",
+  "author": "bebensiganteng",
+  "devDependencies": {
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-requirejs": "*",
+    "grunt-contrib-stylus": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-livereload": "*",
+    "grunt-contrib-connect": "*",
+    "grunt": "~0.4.0",
+    "grunt-regarde": "~0.1.1"
+  }
+}
