@@ -7,15 +7,17 @@
       app: 'js/app',
       models: 'js/app/models',
       views: 'js/app/views',
-      controller: 'js/app/controller'
+      controllers: 'js/app/controllers'
     },
     map: {
       '*': {
         'text': 'libs/text',
-        'libs/jquery.transit': 'libs/jquery.transit.min',
+        'json': 'libs/json',
         'libs/backbone': 'libs/backbone-min',
         'libs/underscore': 'libs/underscore-min',
-        'libs/stately': 'libs/Stately'
+        'libs/jquery.transit': 'libs/jquery.transit.min',
+        'libs/stately': 'libs/Stately',
+        'libs/preloadjs': 'libs/preloadjs-0.3.0.min'
       }
     },
     shim: {
@@ -32,6 +34,6 @@
     }
   });
 
-  requirejs(['app/app']);
+  requirejs(['app/app', 'libs/underscore']);
 
 }).call(this);

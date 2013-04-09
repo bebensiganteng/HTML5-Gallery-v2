@@ -4,18 +4,20 @@ define [
     'libs/underscore'
     ], (
     $
-    Backbone
-    _
+    _b
+    _u
     ) ->
 
-    class AbstractView extends Backbone.View
+    class HomeView extends Backbone.View
 
         initialize: ->
+            _.bindAll @, 'render'
+
+            console.log "HomeView.initialize"
 
         show: ->
 
         hide: ->
-            
-    
+
 
 

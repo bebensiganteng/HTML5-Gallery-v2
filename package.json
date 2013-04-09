@@ -12,6 +12,7 @@
     "grunt-contrib-uglify": "*",
     "grunt-contrib-livereload": "*",
     "grunt-contrib-connect": "*",
+    "grunt-php":"*",
     "grunt": "~0.4.0",
     "grunt-regarde": "~0.1.1"
   }
