@@ -23,10 +23,15 @@
       };
 
       ThumbnailsView.prototype.render = function() {
+        var list;
+
+        $(this.el).append(template);
+        list = ['<ul>'];
         _.each(this.json, function(obj) {
-          return console.log("ThumbnailsView.render:", obj);
+          return list.push("<li>\n    <a href='#' target='_self' title='" + obj.phototitle + "'><img src='" + obj.thumb + "' width='150px' height='150px' /></a>\n</li>");
         });
-        return $(this.el).append(template);
+        list.push('</ul>');
+        return $("#thumbnails").append(list.join(''));
       };
 
       ThumbnailsView.prototype.unrender = function() {

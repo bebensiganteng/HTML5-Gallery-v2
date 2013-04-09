@@ -23,13 +23,24 @@ define [
 
         render: =>
 
+            $(@el).append template
+
+            list = ['<ul>']
+
             # photoid, phototitle, thumb, original
             # TODO: use lazyloaders
             _.each @json, (obj) ->
+                list.push """
+                    <li>
+                        <a href='#' target='_self' title='#{obj.phototitle}'><img src='#{obj.thumb}' width='150px' height='150px' /></a>
+                    </li>
+                """
+                #console.log "ThumbnailsView.render:", obj
 
-                console.log "ThumbnailsView.render:", obj
+            list.push('</ul>')
 
-            $(@el).append template
+            $("#thumbnails").append list.join('')
+            
 
         unrender: =>
             $(@el).remove template

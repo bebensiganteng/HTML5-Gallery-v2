@@ -5,6 +5,11 @@ table{border-collapse:separate;border-spacing:0;vertical-align:middle}
 caption,th,td{text-align:left;font-weight:normal;vertical-align:middle}
 a img{border:none}
 @import url("http://fonts.googleapis.com/css?family=Roboto:400,100");
-html,body{overflow:hidden;font-family:'Roboto',sans-serif}
+html,body{font-family:'Roboto',sans-serif}
 .desktop #gallery{background-color:#d3d3d3}
-.desktop #thumbnails{background-color:#e74747}
+.desktop #thumbnails{background-color:#e74747;}
+.desktop #thumbnails ul{zoom:1}
+.desktop #thumbnails ul:before,.desktop #thumbnails ul:after{content:"";display:table}
+.desktop #thumbnails ul:after{clear:both}
+.desktop #thumbnails li{float:left}
+.desktop #thumbnails img{-webkit-border-radius:75px;border-radius:75px}
