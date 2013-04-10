@@ -10,20 +10,36 @@
       __extends(PageView, _super);
 
       function PageView() {
+        this.transform = __bind(this.transform, this);
+        this.onTouchEnd = __bind(this.onTouchEnd, this);
+        this.onTouchMove = __bind(this.onTouchMove, this);
+        this.onTouchStart = __bind(this.onTouchStart, this);
+        this.onMouseUp = __bind(this.onMouseUp, this);
+        this.onMouseMove = __bind(this.onMouseMove, this);
+        this.onMouseDown = __bind(this.onMouseDown, this);
+        this.setMobileInteraction = __bind(this.setMobileInteraction, this);
+        this.setDesktopInteraction = __bind(this.setDesktopInteraction, this);
+        this.setIds = __bind(this.setIds, this);
         this.onResize = __bind(this.onResize, this);
+        this.animate = __bind(this.animate, this);
+        this.updatePage = __bind(this.updatePage, this);
         this.onStateChange = __bind(this.onStateChange, this);
-        this.hide = __bind(this.hide, this);
-        this.show = __bind(this.show, this);        _ref = PageView.__super__.constructor.apply(this, arguments);
+        this.render = __bind(this.render, this);
+        this.unrender = __bind(this.unrender, this);        _ref = PageView.__super__.constructor.apply(this, arguments);
         return _ref;
       }
 
       PageView.prototype.pages = null;
 
+      PageView.prototype.width = null;
+
+      PageView.prototype.height = null;
+
       PageView.prototype.initialize = function() {
-        return _.bindAll(this, 'render');
+        return _.bindAll(this, 'render', 'unrender');
       };
 
-      PageView.prototype.show = function() {
+      PageView.prototype.unrender = function() {
         return $(this.el).transition({
           opacity: 0
         }, 500, 'ease-in-out', function() {
@@ -31,7 +47,11 @@
         });
       };
 
-      PageView.prototype.hide = function() {
+      PageView.prototype.render = function(ids) {
+        this.ids = ids;
+        $(this.el).css({
+          opacity: 0
+        });
         return $(this.el).transition({
           opacity: 1
         }, 500, 'ease-in-out');
@@ -49,10 +69,69 @@
             _ref1.unrender();
           }
         }
-        return (_ref2 = this.pages[newState]) != null ? typeof _ref2.render === "function" ? _ref2.render() : void 0 : void 0;
+        return (_ref2 = this.pages[newState]) != null ? typeof _ref2.render === "function" ? _ref2.render(this.ids) : void 0 : void 0;
       };
 
-      PageView.prototype.onResize = function() {};
+      PageView.prototype.updatePage = function() {
+        return console.log("PageView.updatePage");
+      };
+
+      PageView.prototype.animate = function() {};
+
+      PageView.prototype.onResize = function() {
+        this.width = $(window).outerWidth();
+        return this.height = $(window).outerHeight();
+      };
+
+      PageView.prototype.setIds = function(ids) {
+        this.ids = ids;
+        return console.log("setIds:", this.ids);
+      };
+
+      PageView.prototype.setDesktopInteraction = function() {
+        $(document).on('mousedown', this.onMouseDown);
+        $(document).on("mousemove", this.onMouseMove);
+        $(document).on("mouseup", this.onMouseUp);
+        return this;
+      };
+
+      PageView.prototype.setMobileInteraction = function() {
+        $(document)[0].addEventListener("touchstart", this.onTouchStart, true);
+        $(document)[0].addEventListener("touchmove", this.onTouchMove, true);
+        $(document)[0].addEventListener("touchend", this.onTouchEnd, true);
+        return this;
+      };
+
+      PageView.prototype.onMouseDown = function(e) {};
+
+      PageView.prototype.onMouseMove = function(e) {};
+
+      PageView.prototype.onMouseUp = function(e) {};
+
+      PageView.prototype.onTouchStart = function(e) {};
+
+      PageView.prototype.onTouchMove = function(e) {};
+
+      PageView.prototype.onTouchEnd = function(e) {};
+
+      PageView.prototype.transform = function(elem, x, y, rz, sx, sy) {
+        if (rz == null) {
+          rz = 0;
+        }
+        if (sx == null) {
+          sx = 1;
+        }
+        if (sy == null) {
+          sy = 1;
+        }
+        return elem.css({
+          '-webkit-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')',
+          '-moz-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')',
+          '-o-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')',
+          '-ms-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')',
+          'transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')'
+        });
+      };
 
       return PageView;
 

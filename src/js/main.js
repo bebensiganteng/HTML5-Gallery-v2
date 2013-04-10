@@ -13,15 +13,25 @@
       '*': {
         'text': 'libs/text',
         'json': 'libs/json',
+        'libs/pixi': 'libs/pixi',
         'libs/backbone': 'libs/backbone-min',
         'libs/underscore': 'libs/underscore-min',
         'libs/jquery.transit': 'libs/jquery.transit.min',
         'libs/stately': 'libs/Stately',
-        'libs/preloadjs': 'libs/preloadjs-0.3.0.min'
+        'libs/preloadjs': 'libs/preloadjs-0.3.0.min',
+        'libs/jquery.lazyload': 'libs/jquery.lazyload.min',
+        'libs/tweenlite': 'libs/TweenLite.min',
+        'libs/easepack': 'libs/EasePack.min'
       }
     },
     shim: {
       'libs/jquery.transit': {
+        deps: ['jquery']
+      },
+      'libs/jquery.lazyload': {
+        deps: ['jquery']
+      },
+      'libs/tweenlite': {
         deps: ['jquery']
       },
       'libs/backbone': {

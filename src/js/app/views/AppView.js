@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'controllers/AppState', 'views/desktop/DesktopView', 'views/mobile/MobileView', 'libs/stately', 'json!php/temp.json'], function($, _b, _u, AppState, DesktopView, MobileView, Stately, json) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/stately', 'controllers/AppState', 'views/desktop/DesktopView', 'views/mobile/MobileView', 'json!php/temp.json', 'libs/pixi'], function($, _b, _u, Stately, AppState, DesktopView, MobileView, json, pixi) {
     var AppView, _ref;
 
     return AppView = (function(_super) {
@@ -13,7 +13,7 @@
         this.scrollUp = __bind(this.scrollUp, this);
         this.onHashChanged = __bind(this.onHashChanged, this);
         this.onAssetsLoaded = __bind(this.onAssetsLoaded, this);
-        this.onResize = __bind(this.onResize, this);
+        this.animate = __bind(this.animate, this);
         this.render = __bind(this.render, this);
         this.initMachine = __bind(this.initMachine, this);        _ref = AppView.__super__.constructor.apply(this, arguments);
         return _ref;
@@ -31,10 +31,9 @@
         _.bindAll(this, 'render');
         this.el = $("#content");
         this.json = json;
-        $(window).resize(this.onResize);
-        this.onResize();
         this.render();
-        return this.initMachine();
+        this.initMachine();
+        return $(window).resize(this.platform.onResize);
       };
 
       AppView.prototype.initMachine = function() {
@@ -63,20 +62,24 @@
 
       AppView.prototype.render = function() {
         if (AppState.isDesktop) {
-          return this.platform = new DesktopView({
+          this.platform = new DesktopView({
             el: this.el,
             json: this.json
-          });
+          }).setDesktopInteraction();
         } else {
-          return this.platform = new MobileView({
+          this.platform = new MobileView({
             el: this.el,
             json: this.json
-          });
+          }).setMobileInteraction();
         }
+        return this.animate();
       };
 
-      AppView.prototype.onResize = function() {
-        return console.log("AppView.onResize");
+      AppView.prototype.animate = function() {
+        requestAnimationFrame(this.animate);
+        if (!AppState.isPaused) {
+          return this.platform.animate();
+        }
       };
 
       AppView.prototype.onAssetsLoaded = function() {
@@ -84,8 +87,15 @@
       };
 
       AppView.prototype.onHashChanged = function(subid, id) {
-        console.log("AppView.onHashChanged", subid, id);
-        return this.machine[subid]();
+        this.platform.setIds({
+          subid: subid,
+          id: id
+        });
+        if (this.machine.getMachineState().toLowerCase() === subid) {
+          return this.platform.updatePage();
+        } else {
+          return this.machine[subid]();
+        }
       };
 
       AppView.prototype.scrollUp = function() {

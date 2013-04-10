@@ -2,21 +2,23 @@ define [
     'jquery'
     'libs/backbone'
     'libs/underscore'
+    'libs/stately'
     'controllers/AppState'
     'views/desktop/DesktopView'
     'views/mobile/MobileView'
-    'libs/stately'
-    #'json!php/json.php'
+    #'json!php/json.php' #change this to php when live
     'json!php/temp.json'
+    'libs/pixi'
     ], (
     $
     _b
     _u
+    Stately
     AppState
     DesktopView
     MobileView
-    Stately
     json
+    pixi
     ) ->
 
     class AppView extends Backbone.View
@@ -33,11 +35,12 @@ define [
             @el         = $("#content")
             @json       = json
 
-            $( window ).resize @onResize
-            @onResize()
-
             @render()
             @initMachine()
+
+            $( window ).resize @platform.onResize
+            # $( window ).focus @onFocus
+            # $( window ).blur @onBlur
 
         initMachine: =>
 
@@ -67,20 +70,35 @@ define [
                 @platform = new DesktopView
                     el: @el
                     json: @json
+                .setDesktopInteraction()
             else
                 @platform = new MobileView
                     el: @el
                     json: @json
+                .setMobileInteraction()
 
-        onResize: =>
-            console.log "AppView.onResize"
+            @animate()
+
+        # Centralized requestAnimationFrame, so it wont get stacked
+        animate: =>
+            requestAnimationFrame @animate
+
+            if !AppState.isPaused
+                @platform.animate()
+            
 
         onAssetsLoaded: =>
             console.log "AppView.onAssetsLoaded"
 
         onHashChanged: (subid, id) =>
-            console.log "AppView.onHashChanged", subid, id
-            @machine[subid]()
+            #console.log "AppView.onHashChanged", @machine.getMachineState().toLowerCase(), subid
+            @platform.setIds {subid, id}
+
+            # for regular site this is not needed
+            if @machine.getMachineState().toLowerCase() is subid
+                @platform.updatePage()
+            else
+                @machine[subid]()
 
         scrollUp: =>
             $("html, body").animate scrollTop: "0px", 500

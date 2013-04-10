@@ -10,6 +10,14 @@
       __extends(DesktopView, _super);
 
       function DesktopView() {
+        this.onTouchEnd = __bind(this.onTouchEnd, this);
+        this.onTouchMove = __bind(this.onTouchMove, this);
+        this.onTouchStart = __bind(this.onTouchStart, this);
+        this.onMouseUp = __bind(this.onMouseUp, this);
+        this.onMouseMove = __bind(this.onMouseMove, this);
+        this.onMouseDown = __bind(this.onMouseDown, this);
+        this.animate = __bind(this.animate, this);
+        this.onResize = __bind(this.onResize, this);
         this.onStateChange = __bind(this.onStateChange, this);
         this.render = __bind(this.render, this);        _ref = DesktopView.__super__.constructor.apply(this, arguments);
         return _ref;
@@ -35,6 +43,56 @@
 
       DesktopView.prototype.onStateChange = function(event, oldState, newState) {
         return DesktopView.__super__.onStateChange.call(this, event, oldState, newState);
+      };
+
+      DesktopView.prototype.onResize = function() {
+        DesktopView.__super__.onResize.call(this);
+        return _.each(this.pages, function(obj) {
+          return obj.onResize();
+        });
+      };
+
+      DesktopView.prototype.animate = function() {
+        DesktopView.__super__.animate.call(this);
+        return _.each(this.pages, function(obj) {
+          return obj.animate();
+        });
+      };
+
+      DesktopView.prototype.onMouseDown = function(e) {
+        return _.each(this.pages, function(obj) {
+          return obj.onMouseDown(e);
+        });
+      };
+
+      DesktopView.prototype.onMouseMove = function(e) {
+        return _.each(this.pages, function(obj) {
+          return obj.onMouseMove(e);
+        });
+      };
+
+      DesktopView.prototype.onMouseUp = function(e) {
+        return _.each(this.pages, function(obj) {
+          return obj.onMouseUp(e);
+        });
+      };
+
+      DesktopView.prototype.onTouchStart = function(e) {
+        return _.each(this.pages, function(obj) {
+          return obj.onTouchStart(e);
+        });
+      };
+
+      DesktopView.prototype.onTouchMove = function(e) {
+        return _.each(this.pages, function(obj) {
+          return obj.onTouchMove(e);
+        });
+      };
+
+      DesktopView.prototype.onTouchEnd = function(e) {
+        return _.each(this.pages, function(obj) {
+          return obj.onTouchEnd(e);
+        });
       };
 
       return DesktopView;

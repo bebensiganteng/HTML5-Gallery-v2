@@ -12,6 +12,8 @@ define [
         @isMobile       : (/iphone|ipod|android|blackberry|opera mini|opera mobi|skyfire|maemo|windows phone|palm|iemobile|symbian|symbianos|fennec/i.test(navigator.userAgent.toLowerCase()))
         @isDesktop      : false
 
+        @isPaused       : false
+
         constructor : ->
 
             AppState.isDesktop = not AppState.isTablet and not AppState.isMobile

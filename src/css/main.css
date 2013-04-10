@@ -5,11 +5,9 @@ table{border-collapse:separate;border-spacing:0;vertical-align:middle}
 caption,th,td{text-align:left;font-weight:normal;vertical-align:middle}
 a img{border:none}
 @import url("http://fonts.googleapis.com/css?family=Roboto:400,100");
-html,body{font-family:'Roboto',sans-serif}
+html,body{overflow:hidden;font-family:'Roboto',sans-serif}
 .desktop #gallery{background-color:#d3d3d3}
-.desktop #thumbnails{background-color:#e74747;}
-.desktop #thumbnails ul{zoom:1}
-.desktop #thumbnails ul:before,.desktop #thumbnails ul:after{content:"";display:table}
-.desktop #thumbnails ul:after{clear:both}
-.desktop #thumbnails li{float:left}
-.desktop #thumbnails img{-webkit-border-radius:75px;border-radius:75px}
+.desktop #thumbnails{background-color:#e74747;white-space:nowrap;position:relative;}
+.desktop #thumbnails .thumbsnails-links{display:inline-block;width:150px;height:150px;margin-left:15px;}
+.desktop #thumbnails .thumbsnails-links img{-webkit-border-radius:75px;border-radius:75px;-webkit-box-shadow:0 0 5px #000;box-shadow:0 0 5px #000}
+.desktop #thumbnails .thumbsnails-links:first-child{margin-left:0}

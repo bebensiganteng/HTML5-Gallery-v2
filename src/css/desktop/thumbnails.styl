@@ -2,9 +2,18 @@
 	
 	#thumbnails
 		background-color #e74747
-		ul
-			clearfix()
-		li
-			float left
-		img
-			border-radius (150px/2)
+		white-space nowrap
+		position relative
+
+		.thumbsnails-links
+			display inline-block
+			width 150px
+			height 150px
+			margin-left 15px
+
+			img
+				border-radius (150px/2)
+				box-shadow 0 0 5px black
+
+			&:first-child
+				margin-left 0
