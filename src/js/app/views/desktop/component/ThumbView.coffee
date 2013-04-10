@@ -19,8 +19,8 @@ define [
 
             @id = Number(id)
 
-            @el = """
-                <div class='thumbsnails-links'>
+            return """
+                <div id='thumbsnails-#{id}'>
                     <a href='./#gallery/#{id}' target='_self' title='#{obj.phototitle}'><img src='#{obj.thumb}' width='150px' height='150px' /></a>
                 </div>
             """
@@ -28,12 +28,22 @@ define [
         setPosition: (@initX, @initY) =>
             # #console.log @id, @initX, @initY
 
-            # @el = $(".thumbsnails-links")
+            @el = $("#thumbsnails-" + @id)
+            @x  = @initX + @id * 165
+            @y  = @initY
 
-            # m = @initX + (@id * 10)
-            # console.log m
+            @transform @el, @x, @y
 
-            # @transform @el, m, @initY
+        update: (tx) =>
+            @x  = tx + @id * 165
+            #s   = 1 - (Math.abs(@x - @initX)/@initX) * 0.2
 
-        animate: =>
-            #console.log "animate"
+            @transform @el, @x, @y, 0, 0.5
+            # if @id == 0
+            #     console.log s
+            #     @transform @el, @x, @y, 0, s
+            
+
+
+
+

@@ -55,11 +55,12 @@
         });
         list.push("</div>");
         this.th.append(list.join(''));
-        this.tg = $("#thumbnails-group");
         return this.onResize();
       };
 
       ThumbnailsView.prototype.onResize = function() {
+        var _this = this;
+
         ThumbnailsView.__super__.onResize.call(this);
         this.th.css({
           width: this.width,
@@ -68,24 +69,26 @@
         this.initX = (this.width - 150) / 2;
         this.initY = (this.height - 150) / 2;
         this.endX = -((this.jsonlength * 165) - (this.width / 2) - (150 / 2));
-        this.transform(this.tg, this.initX, this.initY);
+        _.each(this.thumb, function(obj) {
+          return obj.setPosition(_this.initX, _this.initY);
+        });
         return this.tx = this.initX;
       };
 
       ThumbnailsView.prototype.animate = function() {
-        var d;
+        var d,
+          _this = this;
 
         if (this.v) {
           d = Math.abs(this.initDrag - this.v);
           if (d >= 0) {
             this.v += this.dirX * (d * 0.15);
             this.tx += this.dirX * d * this.tolerance;
-            this.transform(this.tg, this.tx, this.initY);
           }
+          return _.each(this.thumb, function(obj) {
+            return obj.update(_this.tx);
+          });
         }
-        return _.each(this.thumb, function(obj) {
-          return obj.animate();
-        });
       };
 
       ThumbnailsView.prototype.onMouseDown = function(e) {

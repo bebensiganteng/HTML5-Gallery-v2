@@ -114,22 +114,19 @@
 
       PageView.prototype.onTouchEnd = function(e) {};
 
-      PageView.prototype.transform = function(elem, x, y, rz, sx, sy) {
+      PageView.prototype.transform = function(elem, x, y, rz, sx) {
         if (rz == null) {
           rz = 0;
         }
         if (sx == null) {
           sx = 1;
         }
-        if (sy == null) {
-          sy = 1;
-        }
         return elem.css({
-          '-webkit-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')',
-          '-moz-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')',
-          '-o-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')',
-          '-ms-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')',
-          'transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ', ' + sy + ')'
+          '-webkit-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')',
+          '-moz-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')',
+          '-o-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')',
+          '-ms-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')',
+          'transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')'
         });
       };
 

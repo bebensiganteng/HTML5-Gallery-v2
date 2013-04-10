@@ -5,15 +5,18 @@
 		white-space nowrap
 		position relative
 
-		.thumbsnails-links
-			display inline-block
-			width 150px
-			height 150px
-			margin-left 15px
+		#thumbnails-group
+			> div
+				display inline-block
+				width 150px
+				height 150px
+				position absolute
 
-			img
-				border-radius (150px/2)
-				box-shadow 0 0 5px black
+				//margin-left 15px
 
-			&:first-child
-				margin-left 0
+				img
+					border-radius (150px/2)
+					box-shadow 0 0 5px black
+
+				&:first-child
+					margin-left 0

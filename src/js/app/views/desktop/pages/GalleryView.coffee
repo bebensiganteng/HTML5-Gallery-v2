@@ -63,7 +63,7 @@ define [
 
             page = Number(@ids.id)
 
-            if @ids.id is 99
+            if @ids.id is @jsonlength - 1
                 page = 0
             else
                 page++

@@ -8,6 +8,6 @@ a img{border:none}
 html,body{overflow:hidden;font-family:'Roboto',sans-serif}
 .desktop #gallery{background-color:#d3d3d3}
 .desktop #thumbnails{background-color:#e74747;white-space:nowrap;position:relative;}
-.desktop #thumbnails .thumbsnails-links{display:inline-block;width:150px;height:150px;margin-left:15px;}
-.desktop #thumbnails .thumbsnails-links img{-webkit-border-radius:75px;border-radius:75px;-webkit-box-shadow:0 0 5px #000;box-shadow:0 0 5px #000}
-.desktop #thumbnails .thumbsnails-links:first-child{margin-left:0}
+.desktop #thumbnails #thumbnails-group > div{display:inline-block;width:150px;height:150px;position:absolute;}
+.desktop #thumbnails #thumbnails-group > div img{-webkit-border-radius:75px;border-radius:75px;-webkit-box-shadow:0 0 5px #000;box-shadow:0 0 5px #000}
+.desktop #thumbnails #thumbnails-group > div:first-child{margin-left:0}

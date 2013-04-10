@@ -56,8 +56,6 @@ define [
 
             @th.append list.join('')
 
-            @tg = $("#thumbnails-group")
-
             @onResize()
 
             # TweenLite.to $("#thumbnails-group"), .35,
@@ -79,7 +77,9 @@ define [
             # using tg.width() wasnt accurate
             @endX = -((@jsonlength * 165) - (@width/2) - (150/2))
 
-            @transform @tg, @initX, @initY
+            #@transform @tg, @initX, @initY
+
+            _.each @thumb, (obj) => obj.setPosition @initX, @initY
 
             @tx = @initX
 
@@ -94,9 +94,7 @@ define [
                     #     w = (@tx - @initX) / (@width/5)
                     #     @tolerance = 1 - w
 
-                    @transform @tg, @tx, @initY
-
-            _.each @thumb, (obj) -> obj.animate()
+                   _.each @thumb, (obj) => obj.update @tx
 
         # DESKTOP
 

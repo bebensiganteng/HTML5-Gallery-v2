@@ -66,7 +66,7 @@
 
         e.preventDefault();
         page = Number(this.ids.id);
-        if (this.ids.id === 99) {
+        if (this.ids.id === this.jsonlength - 1) {
           page = 0;
         } else {
           page++;
