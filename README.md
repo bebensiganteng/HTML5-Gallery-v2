@@ -1,4 +1,4 @@
-Simple-HTML-JS-framework
+HTML5 Gallery v2
 ========================
 
 Although it is not the best <a href="http://engineering.twitter.com/2012/05/improving-performance-on-twittercom.html">method out there</a> 
