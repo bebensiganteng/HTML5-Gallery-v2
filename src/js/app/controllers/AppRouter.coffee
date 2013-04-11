@@ -2,10 +2,12 @@ define [
     'jquery'
     'libs/backbone'
     'libs/underscore'
+    'controllers/AppState'
     ], (
     $
     _b
     _u
+    AppState
     ) ->
 
     class AppRouter extends Backbone.Router
@@ -27,6 +29,9 @@ define [
             Backbone.history.start()
 
         hashChanged: (subid, id) =>
+
+            AppState.isIntro = false unless subid is "thumbnails"
+
             @trigger AppRouter.EVENT_HASH_CHANGED, subid, id
 
         default: (actions) ->

@@ -91,7 +91,6 @@ define [
             console.log "AppView.onAssetsLoaded"
 
         onHashChanged: (subid, id) =>
-            #console.log "AppView.onHashChanged", @machine.getMachineState().toLowerCase(), subid
             @platform.setIds {subid, id}
 
             # for regular site this is not needed

@@ -85,7 +85,6 @@
 
       PageView.prototype.setIds = function(ids) {
         this.ids = ids;
-        return console.log("setIds:", this.ids);
       };
 
       PageView.prototype.setDesktopInteraction = function() {
@@ -114,20 +113,17 @@
 
       PageView.prototype.onTouchEnd = function(e) {};
 
-      PageView.prototype.transform = function(elem, x, y, rz, sx) {
-        if (rz == null) {
-          rz = 0;
+      PageView.prototype.transform = function(elem, x, y, z, r, s) {
+        if (z == null) {
+          z = 0;
         }
-        if (sx == null) {
-          sx = 1;
+        if (r == null) {
+          r = 0;
         }
-        return elem.css({
-          '-webkit-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')',
-          '-moz-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')',
-          '-o-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')',
-          '-ms-transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')',
-          'transform': 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')'
-        });
+        if (s == null) {
+          s = 1;
+        }
+        return elem.style['-webkit-transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
       };
 
       return PageView;

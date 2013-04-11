@@ -59,7 +59,6 @@ define [
             @height = $(window).outerHeight()
 
         setIds: (@ids) =>
-            console.log "setIds:", @ids
 
         # INTERACTION
 
@@ -97,10 +96,10 @@ define [
 
         #CSS3
 
-        transform: (elem, x, y, rz = 0, sx = 1) =>
-            elem.css
-                '-webkit-transform' : 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')'
-                '-moz-transform'    : 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')'
-                '-o-transform'      : 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')'
-                '-ms-transform'     : 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')'
-                'transform'         : 'translate(' + x + 'px, ' + y + 'px) rotateZ(' + rz + 'deg) scale(' + sx + ')'
+        transform: (elem, x, y, z = 0, r = 0, s = 1) =>
+
+            elem.style['-webkit-transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+            # elem.style['-moz-transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+            # elem.style['-o-transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+            # elem.style['-ms-transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+            # elem.style['transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';

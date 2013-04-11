@@ -15,6 +15,8 @@
 
       AppState.isPaused = false;
 
+      AppState.isIntro = true;
+
       function AppState() {
         this.setMobile = __bind(this.setMobile, this);
         this.setDesktop = __bind(this.setDesktop, this);        AppState.isDesktop = !AppState.isTablet && !AppState.isMobile;

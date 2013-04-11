@@ -31,6 +31,12 @@ define [
                     el: @el
                     json: @options.json
 
+        updatePage: =>
+            _.each @pages, (obj) -> obj.updatePage()
+
+        setIds: (@ids) =>
+            _.each @pages, (obj) => obj.setIds @ids
+
         onStateChange: (event, oldState, newState) =>
             super(event, oldState, newState)
 

@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore'], function($, _b, _u) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'controllers/AppState'], function($, _b, _u, AppState) {
     var AppRouter, _ref;
 
     return AppRouter = (function(_super) {
@@ -29,6 +29,9 @@
       };
 
       AppRouter.prototype.hashChanged = function(subid, id) {
+        if (subid !== "thumbnails") {
+          AppState.isIntro = false;
+        }
         return this.trigger(AppRouter.EVENT_HASH_CHANGED, subid, id);
       };
 

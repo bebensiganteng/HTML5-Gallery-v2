@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/tweenlite', 'libs/easepack', 'views/PageView', 'views/desktop/component/ThumbView', 'text!templates/desktop/thumbnails.html'], function($, _b, _u, _t, _e, PageView, ThumbView, template) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/tweenlite', 'libs/easepack', 'controllers/AppState', 'views/PageView', 'views/desktop/component/ThumbView', 'text!templates/desktop/thumbnails.html'], function($, _b, _u, _t, _e, AppState, PageView, ThumbView, template) {
     var ThumbnailsView, _ref;
 
     return ThumbnailsView = (function(_super) {
@@ -17,18 +17,20 @@
         this.onMouseMove = __bind(this.onMouseMove, this);
         this.onMouseDown = __bind(this.onMouseDown, this);
         this.animate = __bind(this.animate, this);
+        this.updatePage = __bind(this.updatePage, this);
+        this.onThumbUpdate = __bind(this.onThumbUpdate, this);
         this.onResize = __bind(this.onResize, this);
         this.render = __bind(this.render, this);        _ref = ThumbnailsView.__super__.constructor.apply(this, arguments);
         return _ref;
       }
 
-      ThumbnailsView.prototype.dirX = 0;
+      ThumbnailsView.prototype.acc = .5;
 
-      ThumbnailsView.prototype.tolerance = 1;
+      ThumbnailsView.prototype.dec = .2;
 
-      ThumbnailsView.prototype.initDrag = null;
+      ThumbnailsView.prototype.outOfBounds = null;
 
-      ThumbnailsView.prototype.v = null;
+      ThumbnailsView.prototype.onTween = true;
 
       ThumbnailsView.prototype.initialize = function() {
         ThumbnailsView.__super__.initialize.call(this);
@@ -55,7 +57,13 @@
         });
         list.push("</div>");
         this.th.append(list.join(''));
-        return this.onResize();
+        this.drag = false;
+        this.direction = 0;
+        this.x0 = this.x1 = 0;
+        this.speed = 0;
+        this.outOfBounds = false;
+        this.onResize();
+        return this.updatePage();
       };
 
       ThumbnailsView.prototype.onResize = function() {
@@ -68,43 +76,74 @@
         });
         this.initX = (this.width - 150) / 2;
         this.initY = (this.height - 150) / 2;
-        this.endX = -((this.jsonlength * 165) - (this.width / 2) - (150 / 2));
-        _.each(this.thumb, function(obj) {
-          return obj.setPosition(_this.initX, _this.initY);
+        this.endX = (this.jsonlength - 1) * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING);
+        return _.each(this.thumb, function(obj) {
+          if (obj.initX == null) {
+            obj.onResize();
+            obj.setPosition(_this.initX, _this.endX);
+            obj.on(ThumbView.THUMB_UPDATE, _this.onThumbUpdate);
+          }
+          return obj.update(_this.initY);
         });
-        return this.tx = this.initX;
+      };
+
+      ThumbnailsView.prototype.onThumbUpdate = function(e, sel) {
+        var _this = this;
+
+        switch (e) {
+          case ThumbView.THUMB_SELECTED:
+            this.onTween = true;
+            return _.each(this.thumb, function(obj) {
+              if (obj.id !== sel.id) {
+                return obj.follow(sel.id, sel.x);
+              }
+            });
+          case ThumbView.TWEEN_END:
+            this.onTween = false;
+            if (AppState.isIntro) {
+              return AppState.isIntro = false;
+            }
+        }
+      };
+
+      ThumbnailsView.prototype.updatePage = function() {
+        return this.thumb[this.ids.id].selected(.8);
       };
 
       ThumbnailsView.prototype.animate = function() {
-        var d,
+        var distance,
           _this = this;
 
-        if (this.v) {
-          d = Math.abs(this.initDrag - this.v);
-          if (d >= 0) {
-            this.v += this.dirX * (d * 0.15);
-            this.tx += this.dirX * d * this.tolerance;
+        if (this.x0) {
+          distance = Math.abs(this.x1 - this.x0);
+          if (distance > 0) {
+            this.speed += this.acc;
           }
-          return _.each(this.thumb, function(obj) {
-            return obj.update(_this.tx);
+          if (distance === 0 && this.speed > 0) {
+            this.speed -= this.dec;
+          }
+          if (this.speed < 0) {
+            this.speed = 0;
+          }
+          _.each(this.thumb, function(obj) {
+            return obj.update(_this.initY, distance, _this.direction, _this.speed);
           });
+          return this.x0 = this.x1;
         }
       };
 
       ThumbnailsView.prototype.onMouseDown = function(e) {
-        this.drag = true;
-        this.v = this.initDrag = e.pageX;
-        return this.tolerance = 1;
+        if (!AppState.isIntro && !this.onTween) {
+          this.drag = true;
+          this.x0 = this.x1 = e.pageX;
+          return this.speed = 0;
+        }
       };
 
       ThumbnailsView.prototype.onMouseMove = function(e) {
         if (this.drag) {
-          if (e.pageX > this.initDrag) {
-            this.dirX = 1;
-          } else {
-            this.dirX = -1;
-          }
-          return this.initDrag = e.pageX;
+          this.direction = (e.pageX > this.x1 ? 1 : -1);
+          return this.x1 = e.pageX;
         }
       };
 

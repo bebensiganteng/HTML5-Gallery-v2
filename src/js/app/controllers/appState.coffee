@@ -13,6 +13,7 @@ define [
         @isDesktop      : false
 
         @isPaused       : false
+        @isIntro        : true
 
         constructor : ->
 

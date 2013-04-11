@@ -19,6 +19,8 @@
         this.animate = __bind(this.animate, this);
         this.onResize = __bind(this.onResize, this);
         this.onStateChange = __bind(this.onStateChange, this);
+        this.setIds = __bind(this.setIds, this);
+        this.updatePage = __bind(this.updatePage, this);
         this.render = __bind(this.render, this);        _ref = DesktopView.__super__.constructor.apply(this, arguments);
         return _ref;
       }
@@ -39,6 +41,21 @@
             json: this.options.json
           })
         };
+      };
+
+      DesktopView.prototype.updatePage = function() {
+        return _.each(this.pages, function(obj) {
+          return obj.updatePage();
+        });
+      };
+
+      DesktopView.prototype.setIds = function(ids) {
+        var _this = this;
+
+        this.ids = ids;
+        return _.each(this.pages, function(obj) {
+          return obj.setIds(_this.ids);
+        });
       };
 
       DesktopView.prototype.onStateChange = function(event, oldState, newState) {
