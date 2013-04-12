@@ -13,8 +13,6 @@ define [
         initialize: ->
             _.bindAll @, 'render'
 
-            console.log "GalleryView.initialize"
-
         show: ->
 
         hide: ->

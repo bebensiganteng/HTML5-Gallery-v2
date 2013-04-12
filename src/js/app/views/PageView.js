@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/jquery.transit', 'libs/jquery.keyframes'], function($, _b, _u, transit, _k) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/jquery.transit', 'controllers/appState'], function($, _b, _u, transit, AppState) {
     var PageView, _ref;
 
     return PageView = (function(_super) {
@@ -126,7 +126,7 @@
         if (s == null) {
           s = 1;
         }
-        return elem.style[$.keyframe.browserCode() + 'transform'] = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+        return elem.style[AppState.browser + 'transform'] = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
       };
 
       return PageView;

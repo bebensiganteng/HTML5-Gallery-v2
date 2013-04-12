@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'views/PageView', 'controllers/AppState', 'libs/tweenlite', 'libs/easepack', 'utils/KeyframeGenerator', 'libs/jquery.keyframes'], function($, _b, _u, PageView, AppState, _t, _e, KeyframeGenerator, _k) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'views/PageView', 'controllers/AppState', 'libs/jquery.keyframes'], function($, _b, _u, PageView, AppState, _k) {
     var CloudView, _ref;
 
     return CloudView = (function(_super) {
@@ -17,8 +17,6 @@
         return _ref;
       }
 
-      CloudView.prototype.keyframe = false;
-
       CloudView.prototype.built = function(id) {
         this.id = Number(id);
         return "<div id=\"cloud-" + this.id + "\">\n    <img src=\"images/bg/cloud.png\" width=\"256\" height=\"256\"></div>\n</div>";
@@ -28,7 +26,7 @@
         var browser, r, x, y, z;
 
         browser = $.keyframe.browserCode();
-        x = Math.random() * this.width - 200;
+        x = Math.random() * this.width - 100;
         y = Math.random() * (this.height * 0.2) - 150;
         z = -500 * Math.random();
         r = Math.random() * 360;
@@ -45,9 +43,8 @@
       };
 
       CloudView.prototype.setPositions = function() {
-        if (!this.keyframe) {
-          this.addKeyframe();
-        }
+        $.keyframe.removeHead();
+        this.addKeyframe();
         return $('#cloud-' + this.id).playKeyframe({
           name: "cloudkey-" + this.id,
           duration: Math.random() * 30000 + 10000,

@@ -1,7 +1,9 @@
 define [
     'jquery'
+    'libs/jquery.keyframes'
     ], (
     $
+    _k
     ) ->
 
     class AppState
@@ -14,6 +16,8 @@ define [
 
         @isPaused       : false
         @isIntro        : true
+
+        @browser        : $.keyframe.browserCode()
 
         constructor : ->
 

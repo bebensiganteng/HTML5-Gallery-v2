@@ -17,7 +17,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-regarde');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-php');
     grunt.loadNpmTasks('grunt-contrib-livereload');
 
     var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
@@ -104,18 +103,11 @@ module.exports = function(grunt) {
         // FUTURE: change this 
         // https://github.com/anodynos/uRequire
         requirejs: {
-            options: {
-                baseUrl: "src",
-                mainConfigFile: "src/js/main.js"
-            },
-            production: {
+            compile: {
                 options: {
-                    out: "path/to/production.js"
-                }
-            },
-            development: {
-                options: {
-                    out: "path/to/development.js"
+                    baseUrl: "src",
+                    mainConfigFile: "src/js/main.js",
+                    out: "dist"
                 }
             }
         }
@@ -140,6 +132,6 @@ module.exports = function(grunt) {
     // ])
     
     grunt.registerTask('production', [
-        'requirejs:production'
+        'requirejs:compile'
     ])
 }

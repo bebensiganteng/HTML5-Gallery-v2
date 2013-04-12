@@ -3,14 +3,16 @@ define [
     'libs/backbone'
     'libs/underscore'
     'libs/jquery.transit'
-    'libs/jquery.keyframes'
+    'controllers/appState'
+    #'libs/jquery.keyframes'
     # 'libs/jquery.lazyload'
     ], (
     $
     _b
     _u
     transit
-    _k
+    AppState
+    #_k
     # _l
     ) ->
 
@@ -102,4 +104,4 @@ define [
 
         transform: (elem, x, y, z = 0, r = 0, s = 1) =>
 
-            elem.style[$.keyframe.browserCode() + 'transform'] = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+            elem.style[AppState.browser + 'transform'] = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';

@@ -38,7 +38,11 @@ $.keyframe = {
 			$('#keyframes-style').append(css);
 		}
 		$('#keyframes-style').append(' .boostKeyframe{transform:scale3d(1,1,1);}');
-	}
+	},
+
+	removeHead: function(){
+		$('#keyframes-style').children().remove();
+	},
 };
 
 $.fn.resetKeyframe = function(callback){

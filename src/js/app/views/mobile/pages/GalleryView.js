@@ -14,8 +14,7 @@
       }
 
       GalleryView.prototype.initialize = function() {
-        _.bindAll(this, 'render');
-        return console.log("GalleryView.initialize");
+        return _.bindAll(this, 'render');
       };
 
       GalleryView.prototype.show = function() {};

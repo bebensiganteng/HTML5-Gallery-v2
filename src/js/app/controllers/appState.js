@@ -1,7 +1,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(['jquery'], function($) {
+  define(['jquery', 'libs/jquery.keyframes'], function($, _k) {
     var AppState;
 
     return AppState = (function() {
@@ -16,6 +16,8 @@
       AppState.isPaused = false;
 
       AppState.isIntro = true;
+
+      AppState.browser = $.keyframe.browserCode();
 
       function AppState() {
         this.setMobile = __bind(this.setMobile, this);
