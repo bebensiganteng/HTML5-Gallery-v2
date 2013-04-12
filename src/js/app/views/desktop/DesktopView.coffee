@@ -5,6 +5,7 @@ define [
     'views/PageView'
     'views/desktop/pages/ThumbnailsView'
     'views/desktop/pages/GalleryView'
+    'views/desktop/pages/BackgroundView'
     ], (
     $
     _b
@@ -12,6 +13,7 @@ define [
     PageView
     ThumbnailsView
     GalleryView
+    BackgroundView
     ) ->
 
     class DesktopView extends PageView
@@ -31,6 +33,8 @@ define [
                     el: @el
                     json: @options.json
 
+                BACKGROUND: new BackgroundView()
+
         updatePage: =>
             _.each @pages, (obj) -> obj.updatePage()
 
@@ -47,6 +51,9 @@ define [
         animate: =>
             super()
             _.each @pages, (obj) -> obj.animate()
+
+        playIntro: =>
+            _.each @pages, (obj) -> obj.playIntro()
 
         # DESKTOP
 

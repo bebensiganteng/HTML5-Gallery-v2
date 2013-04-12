@@ -24,7 +24,7 @@ define [
         @TWEEN_END      : 'TWEEN_END'
 
         @OBJ_WIDTH      : 150
-        @OBJ_PADDING    : 5
+        @OBJ_PADDING    : 20
 
         initialize: ->
             super()
@@ -68,15 +68,18 @@ define [
             #return @y + Math.sin(@getCenterNormal() * 100)
             return @y
 
+        getZ: =>
+            return @getCenterNormal() * -100
+
         arbitrary: =>
-            @transform @el, @x, @getY(), 0, 0, @getScale()
+            @transform @el, @x, @getY(), @getZ(), 0, 1
 
             @trigger ThumbView.THUMB_UPDATE, ThumbView.THUMB_SELECTED, @
 
         follow: (id, posX) =>
             @x = posX + (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING) * (@id - id)
 
-            @transform @el, @x, @getY(), 0, 0, @getScale()
+            @transform @el, @x, @getY(), @getZ(), 0, 1
 
         update: (@y, distance = 0, direction = 0, speed = 0 )=>
 
@@ -85,7 +88,7 @@ define [
 
             @x += direction * (distance + speed)
 
-            @transform @el, @x, @getY(), 0, 0, @getScale()
+            @transform @el, @x, @getY(), @getZ(), 0, 1
 
 
 

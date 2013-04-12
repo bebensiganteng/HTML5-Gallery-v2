@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'views/PageView', 'views/desktop/pages/ThumbnailsView', 'views/desktop/pages/GalleryView'], function($, _b, _u, PageView, ThumbnailsView, GalleryView) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'views/PageView', 'views/desktop/pages/ThumbnailsView', 'views/desktop/pages/GalleryView', 'views/desktop/pages/BackgroundView'], function($, _b, _u, PageView, ThumbnailsView, GalleryView, BackgroundView) {
     var DesktopView, _ref;
 
     return DesktopView = (function(_super) {
@@ -16,6 +16,7 @@
         this.onMouseUp = __bind(this.onMouseUp, this);
         this.onMouseMove = __bind(this.onMouseMove, this);
         this.onMouseDown = __bind(this.onMouseDown, this);
+        this.playIntro = __bind(this.playIntro, this);
         this.animate = __bind(this.animate, this);
         this.onResize = __bind(this.onResize, this);
         this.onStateChange = __bind(this.onStateChange, this);
@@ -39,7 +40,8 @@
           GALLERY: new GalleryView({
             el: this.el,
             json: this.options.json
-          })
+          }),
+          BACKGROUND: new BackgroundView()
         };
       };
 
@@ -73,6 +75,12 @@
         DesktopView.__super__.animate.call(this);
         return _.each(this.pages, function(obj) {
           return obj.animate();
+        });
+      };
+
+      DesktopView.prototype.playIntro = function() {
+        return _.each(this.pages, function(obj) {
+          return obj.playIntro();
         });
       };
 

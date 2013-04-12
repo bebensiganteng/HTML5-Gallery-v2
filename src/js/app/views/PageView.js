@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/jquery.transit'], function($, _b, _u, transit) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/jquery.transit', 'libs/jquery.keyframes'], function($, _b, _u, transit, _k) {
     var PageView, _ref;
 
     return PageView = (function(_super) {
@@ -19,6 +19,7 @@
         this.onMouseDown = __bind(this.onMouseDown, this);
         this.setMobileInteraction = __bind(this.setMobileInteraction, this);
         this.setDesktopInteraction = __bind(this.setDesktopInteraction, this);
+        this.playIntro = __bind(this.playIntro, this);
         this.setIds = __bind(this.setIds, this);
         this.onResize = __bind(this.onResize, this);
         this.animate = __bind(this.animate, this);
@@ -87,6 +88,8 @@
         this.ids = ids;
       };
 
+      PageView.prototype.playIntro = function() {};
+
       PageView.prototype.setDesktopInteraction = function() {
         $(document).on('mousedown', this.onMouseDown);
         $(document).on("mousemove", this.onMouseMove);
@@ -123,7 +126,7 @@
         if (s == null) {
           s = 1;
         }
-        return elem.style['-webkit-transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+        return elem.style[$.keyframe.browserCode() + 'transform'] = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
       };
 
       return PageView;

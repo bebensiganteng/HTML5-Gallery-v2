@@ -83,7 +83,7 @@
       };
 
       AppView.prototype.onAssetsLoaded = function() {
-        return console.log("AppView.onAssetsLoaded");
+        return this.platform.playIntro();
       };
 
       AppView.prototype.onHashChanged = function(subid, id) {

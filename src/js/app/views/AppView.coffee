@@ -85,10 +85,9 @@ define [
 
             if !AppState.isPaused
                 @platform.animate()
-            
 
         onAssetsLoaded: =>
-            console.log "AppView.onAssetsLoaded"
+            @platform.playIntro()
 
         onHashChanged: (subid, id) =>
             @platform.setIds {subid, id}

@@ -57,6 +57,7 @@ module.exports = function(grunt) {
                     'src/js/app/collection',
                     'src/js/app/controllers',
                     'src/js/app/models',
+                    'src/js/app/utils',
                     'src/js/app/views',
                     'src/js/app/views/pc',
                     'src/js/app/views/mobile'
@@ -67,6 +68,7 @@ module.exports = function(grunt) {
                     'src/js/app/collection',
                     'src/js/app/controllers',
                     'src/js/app/models',
+                    'src/js/app/utils',
                     'src/js/app/views',
                     'src/js/app/views/pc',
                     'src/js/app/views/mobile'

@@ -11,6 +11,7 @@
         approuter = new AppRouter();
         approuter.on(AppRouter.EVENT_HASH_CHANGED, appview.onHashChanged);
         approuter.start();
+        appview.onAssetsLoaded();
       }
 
       return App;

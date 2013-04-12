@@ -13,6 +13,7 @@
         this.update = __bind(this.update, this);
         this.follow = __bind(this.follow, this);
         this.arbitrary = __bind(this.arbitrary, this);
+        this.getZ = __bind(this.getZ, this);
         this.getY = __bind(this.getY, this);
         this.getScale = __bind(this.getScale, this);
         this.getCenterNormal = __bind(this.getCenterNormal, this);
@@ -30,7 +31,7 @@
 
       ThumbView.OBJ_WIDTH = 150;
 
-      ThumbView.OBJ_PADDING = 5;
+      ThumbView.OBJ_PADDING = 20;
 
       ThumbView.prototype.initialize = function() {
         return ThumbView.__super__.initialize.call(this);
@@ -78,14 +79,18 @@
         return this.y;
       };
 
+      ThumbView.prototype.getZ = function() {
+        return this.getCenterNormal() * -100;
+      };
+
       ThumbView.prototype.arbitrary = function() {
-        this.transform(this.el, this.x, this.getY(), 0, 0, this.getScale());
+        this.transform(this.el, this.x, this.getY(), this.getZ(), 0, 1);
         return this.trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_SELECTED, this);
       };
 
       ThumbView.prototype.follow = function(id, posX) {
         this.x = posX + (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING) * (this.id - id);
-        return this.transform(this.el, this.x, this.getY(), 0, 0, this.getScale());
+        return this.transform(this.el, this.x, this.getY(), this.getZ(), 0, 1);
       };
 
       ThumbView.prototype.update = function(y, distance, direction, speed) {
@@ -100,7 +105,7 @@
           speed = 0;
         }
         this.x += direction * (distance + speed);
-        return this.transform(this.el, this.x, this.getY(), 0, 0, this.getScale());
+        return this.transform(this.el, this.x, this.getY(), this.getZ(), 0, 1);
       };
 
       return ThumbView;

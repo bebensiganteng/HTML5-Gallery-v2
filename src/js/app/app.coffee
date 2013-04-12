@@ -23,14 +23,12 @@ define [
             
             approuter.on AppRouter.EVENT_HASH_CHANGED, appview.onHashChanged
             approuter.start()
-            
+
             # if you have a huge file that needed to be preloaded eachtime a page is loaded
             # assetloader = new AssetLoader()
-            # assetloader.on AssetLoader.EVENT_LOADED, @onAssetsReady
+            # assetloader.on AssetLoader.EVENT_LOADED, appview.onAssetsLoaded()
 
-
-        # onAssetsReady: =>
-        #     console.log "App.onAssetsReady"
+            appview.onAssetsLoaded()
 
     $ ->
         new App()

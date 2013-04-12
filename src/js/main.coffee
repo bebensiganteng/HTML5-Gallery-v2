@@ -6,6 +6,7 @@ requirejs.config
 	paths:
 		libs: 'js/libs'
 		app: 'js/app'
+		utils: 'js/app/utils'
 		models: 'js/app/models'
 		views: 'js/app/views'
 		controllers: 'js/app/controllers'
@@ -23,8 +24,10 @@ requirejs.config
 			'libs/jquery.lazyload': 'libs/jquery.lazyload.min'
 			'libs/tweenlite': 'libs/TweenLite.min'
 			'libs/easepack': 'libs/EasePack.min'
+			'libs/jquery.keyframes': 'libs/jquery.keyframes'
 
 	shim:
+		'libs/jquery.keyframes': deps: ['jquery']
 		'libs/jquery.transit': deps: ['jquery']
 		'libs/jquery.lazyload': deps: ['jquery']
 		'libs/tweenlite': deps: ['jquery']
