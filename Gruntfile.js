@@ -92,22 +92,69 @@ module.exports = function(grunt) {
             }
           }
         },
-        php: {
-            dist: {
-                options: {
-                    port: '5000',
-                    hostname: '0.0.0.0'
-                }
-            }
-        },
+        // php: {
+        //     dist: {
+        //         options: {
+        //             port: '5000',
+        //             hostname: '0.0.0.0'
+        //         }
+        //     }
+        // },
         // FUTURE: change this 
         // https://github.com/anodynos/uRequire
         requirejs: {
             compile: {
                 options: {
-                    baseUrl: "src",
+                    baseUrl: ".",
+                    appDir: "src",
+                    dir: "dist",
                     mainConfigFile: "src/js/main.js",
-                    out: "dist"
+                    paths: {
+                        jquery: "empty:",
+                    },
+                    map: {
+                        '*': {
+                                'text': 'libs/text',
+                                'json': 'libs/json',
+                                'libs/pixi': 'libs/pixi',
+                                'libs/backbone': 'libs/backbone-min',
+                                'libs/underscore': 'libs/underscore',
+                                'libs/jquery.transit': 'libs/jquery.transit.min',
+                                'libs/stately': 'libs/Stately',
+                                'libs/preloadjs': 'libs/preloadjs-0.3.0.min',
+                                'libs/jquery.lazyload': 'libs/jquery.lazyload.min',
+                                'libs/tweenlite': 'libs/TweenLite.min',
+                                'libs/easepack': 'libs/EasePack.min',
+                                'libs/jquery.keyframes': 'libs/jquery.keyframes'
+                            }
+                    },
+                    shim: {
+                            'libs/jquery.keyframes': {
+                                deps: ['jquery']
+                            },
+                            'libs/jquery.transit': {
+                                deps: ['jquery']
+                            },
+                            'libs/jquery.lazyload': {
+                                deps: ['jquery']
+                            },
+                            'libs/tweenlite': {
+                                deps: ['jquery']
+                            },
+                            'libs/backbone': {
+                                deps: ['libs/underscore', 'jquery'],
+                                exports: 'Backbone'
+                            },
+                            'libs/underscore': {
+                                exports: '_'
+                            }
+                    },
+                    optimize: 'uglify2',
+                    generateSourceMaps: true,
+                    preserveLicenseComments: false,
+                    modules: [{
+                        name: 'js/main'
+                    }]
                 }
             }
         }
@@ -132,6 +179,6 @@ module.exports = function(grunt) {
     // ])
     
     grunt.registerTask('production', [
-        'requirejs:compile'
+        'requirejs'
     ])
 }

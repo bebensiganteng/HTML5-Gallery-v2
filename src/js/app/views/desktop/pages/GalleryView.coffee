@@ -35,9 +35,6 @@ define [
             selected = _.find @json, (obj, id) =>
                 return id == @ids.id
 
-            #console.log "SIZE:", _.size @json
-
-
             #console.log selected
             $("#gallery-content").append "<img title='#{selected.phototitle}' src='#{selected.original}' />"
             #$("img").lazyload effect: "fadeIn"

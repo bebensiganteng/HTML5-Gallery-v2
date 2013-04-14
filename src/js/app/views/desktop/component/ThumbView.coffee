@@ -31,13 +31,13 @@ define [
 
         # photoid, phototitle, thumb, original
         # TODO: load and remove image as it go beyond stage
-        built: (obj, id) =>
+        built: (@obj, id) =>
 
             @id = Number(id)
 
             return """
                 <div id='thumbsnails-#{id}'>
-                    <a href='./#thumbnails/#{id}' target='_self' title='#{obj.phototitle}'><img src='#{obj.thumb}' width='150px' height='150px' /></a>
+                    <a href='./#thumbnails/#{id}' target='_self' title='#{@obj.phototitle}'><img src='#{@obj.thumb}' width='150px' height='150px' /></a>
                 </div>
             """
 

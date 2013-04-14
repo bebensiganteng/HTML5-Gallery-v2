@@ -38,8 +38,9 @@
       };
 
       ThumbView.prototype.built = function(obj, id) {
+        this.obj = obj;
         this.id = Number(id);
-        return "<div id='thumbsnails-" + id + "'>\n    <a href='./#thumbnails/" + id + "' target='_self' title='" + obj.phototitle + "'><img src='" + obj.thumb + "' width='150px' height='150px' /></a>\n</div>";
+        return "<div id='thumbsnails-" + id + "'>\n    <a href='./#thumbnails/" + id + "' target='_self' title='" + this.obj.phototitle + "'><img src='" + this.obj.thumb + "' width='150px' height='150px' /></a>\n</div>";
       };
 
       ThumbView.prototype.setPosition = function(initX, endX) {
