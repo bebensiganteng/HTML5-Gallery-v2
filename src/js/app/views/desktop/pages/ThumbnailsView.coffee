@@ -72,8 +72,9 @@ define [
                 width: @width
                 height: @height
 
+            #@initX = 0
             @initX = (@width - 150)/2
-            @initY = (@height - 150)/2
+            @initY = @height * 0.6
 
             # using tg.width() wasnt accurate
             @endX = (@jsonlength - 1) * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING)
@@ -111,6 +112,7 @@ define [
                     AppState.isIntro = false if AppState.isIntro
 
         updatePage: =>
+            _.each @thumb, (obj) => obj.deselected @ids.id
             @thumb[@ids.id].selected(.8)
 
         animate: =>

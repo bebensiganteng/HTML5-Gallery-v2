@@ -41,11 +41,16 @@
       };
 
       PageView.prototype.unrender = function() {
-        return $(this.el).transition({
-          opacity: 0
-        }, 500, 'ease-in-out', function() {
-          return $(this).children().first().remove();
-        });
+        var child;
+
+        child = $(this.el).children().first();
+        if (child) {
+          return $(child).transition({
+            opacity: 0
+          }, 500, 'ease-in-out', function() {
+            return $(this).remove();
+          });
+        }
       };
 
       PageView.prototype.render = function(ids) {
@@ -64,7 +69,6 @@
         if (oldState === newState) {
           return;
         }
-        console.log("PageView.onStateChange:", event, "old:", oldState, "new:", newState);
         if ((_ref1 = this.pages[oldState]) != null) {
           if (typeof _ref1.unrender === "function") {
             _ref1.unrender();

@@ -18,6 +18,8 @@ define [
 
     class DesktopView extends PageView
 
+        currentPage: null
+
         initialize: ->
             _.bindAll @, 'render'
 
@@ -33,49 +35,58 @@ define [
                     el: @el
                     json: @options.json
 
-                BACKGROUND: new BackgroundView()
+                BACKGROUND: new BackgroundView
+                    el: @el
 
         updatePage: =>
-            _.each @pages, (obj) -> obj.updatePage()
+            @pages[@currentPage].updatePage()
 
         setIds: (@ids) =>
             _.each @pages, (obj) => obj.setIds @ids
-
+            
         onStateChange: (event, oldState, newState) =>
             super(event, oldState, newState)
 
+            @currentPage = newState
+
+            if newState is "GALLERY"
+                @pages.BACKGROUND.unrender()
+            else
+                @pages.BACKGROUND.render()   
+
+
         onResize: =>
             super()
-            _.each @pages, (obj) -> obj.onResize()
+            @pages[@currentPage].onResize()
 
         animate: =>
             super()
-            _.each @pages, (obj) -> obj.animate()
+            @pages[@currentPage].animate() if @currentPage
 
         playIntro: =>
-            _.each @pages, (obj) -> obj.playIntro()
+            @pages[@currentPage].playIntro()
 
         # DESKTOP
 
         onMouseDown: (e) =>
-            _.each @pages, (obj) -> obj.onMouseDown(e)
+            @pages[@currentPage].onMouseDown(e)
 
         onMouseMove: (e) =>
-            _.each @pages, (obj) -> obj.onMouseMove(e)
+            @pages[@currentPage].onMouseMove(e)
 
         onMouseUp: (e) =>
-            _.each @pages, (obj) -> obj.onMouseUp(e)
+            @pages[@currentPage].onMouseUp(e)
 
         # MOBILE
 
         onTouchStart: (e) =>
-            _.each @pages, (obj) -> obj.onTouchStart(e)
+            @pages[@currentPage].onTouchStart(e)
 
         onTouchMove: (e) =>
-            _.each @pages, (obj) -> obj.onTouchMove(e)
+            @pages[@currentPage].onTouchMove(e)
 
         onTouchEnd: (e) =>
-            _.each @pages, (obj) -> obj.onTouchEnd(e)
+            @pages[@currentPage].onTouchEnd(e)
 
 
 

@@ -30,9 +30,12 @@ define [
             #$("img").lazyload effect: "fadeIn"
 
         unrender: =>
-            $(@el).transition
-                opacity: 0
-            , 500, 'ease-in-out', -> $(@).children().first().remove()
+            child = $(@el).children().first()
+
+            if child
+                $(child).transition
+                    opacity: 0
+                , 500, 'ease-in-out', -> $(@).remove()
 
         render: (@ids) =>
             $(@el).css(opacity:0)
@@ -45,8 +48,6 @@ define [
 
         onStateChange: (event, oldState, newState) =>
             return if oldState is newState
-
-            console.log "PageView.onStateChange:", event, "old:", oldState, "new:", newState
 
             @pages[oldState]?.unrender?()
             @pages[newState]?.render?(@ids)

@@ -26,6 +26,8 @@
         return _ref;
       }
 
+      DesktopView.prototype.currentPage = null;
+
       DesktopView.prototype.initialize = function() {
         _.bindAll(this, 'render');
         return this.render();
@@ -41,14 +43,14 @@
             el: this.el,
             json: this.options.json
           }),
-          BACKGROUND: new BackgroundView()
+          BACKGROUND: new BackgroundView({
+            el: this.el
+          })
         };
       };
 
       DesktopView.prototype.updatePage = function() {
-        return _.each(this.pages, function(obj) {
-          return obj.updatePage();
-        });
+        return this.pages[this.currentPage].updatePage();
       };
 
       DesktopView.prototype.setIds = function(ids) {
@@ -61,63 +63,53 @@
       };
 
       DesktopView.prototype.onStateChange = function(event, oldState, newState) {
-        return DesktopView.__super__.onStateChange.call(this, event, oldState, newState);
+        DesktopView.__super__.onStateChange.call(this, event, oldState, newState);
+        this.currentPage = newState;
+        if (newState === "GALLERY") {
+          return this.pages.BACKGROUND.unrender();
+        } else {
+          return this.pages.BACKGROUND.render();
+        }
       };
 
       DesktopView.prototype.onResize = function() {
         DesktopView.__super__.onResize.call(this);
-        return _.each(this.pages, function(obj) {
-          return obj.onResize();
-        });
+        return this.pages[this.currentPage].onResize();
       };
 
       DesktopView.prototype.animate = function() {
         DesktopView.__super__.animate.call(this);
-        return _.each(this.pages, function(obj) {
-          return obj.animate();
-        });
+        if (this.currentPage) {
+          return this.pages[this.currentPage].animate();
+        }
       };
 
       DesktopView.prototype.playIntro = function() {
-        return _.each(this.pages, function(obj) {
-          return obj.playIntro();
-        });
+        return this.pages[this.currentPage].playIntro();
       };
 
       DesktopView.prototype.onMouseDown = function(e) {
-        return _.each(this.pages, function(obj) {
-          return obj.onMouseDown(e);
-        });
+        return this.pages[this.currentPage].onMouseDown(e);
       };
 
       DesktopView.prototype.onMouseMove = function(e) {
-        return _.each(this.pages, function(obj) {
-          return obj.onMouseMove(e);
-        });
+        return this.pages[this.currentPage].onMouseMove(e);
       };
 
       DesktopView.prototype.onMouseUp = function(e) {
-        return _.each(this.pages, function(obj) {
-          return obj.onMouseUp(e);
-        });
+        return this.pages[this.currentPage].onMouseUp(e);
       };
 
       DesktopView.prototype.onTouchStart = function(e) {
-        return _.each(this.pages, function(obj) {
-          return obj.onTouchStart(e);
-        });
+        return this.pages[this.currentPage].onTouchStart(e);
       };
 
       DesktopView.prototype.onTouchMove = function(e) {
-        return _.each(this.pages, function(obj) {
-          return obj.onTouchMove(e);
-        });
+        return this.pages[this.currentPage].onTouchMove(e);
       };
 
       DesktopView.prototype.onTouchEnd = function(e) {
-        return _.each(this.pages, function(obj) {
-          return obj.onTouchEnd(e);
-        });
+        return this.pages[this.currentPage].onTouchEnd(e);
       };
 
       return DesktopView;

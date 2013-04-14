@@ -20,7 +20,7 @@
 
       GalleryView.prototype.events = {
         "click a#gallery-left": "onLeft",
-        "click a#gallery-up": "onUp",
+        "click a#gallery-close": "onUp",
         "click a#gallery-right": "onRight"
       };
 
@@ -37,6 +37,11 @@
         this.ids = ids;
         GalleryView.__super__.render.call(this, this.ids);
         $(this.el).append(template);
+        this.gal = $("#gallery");
+        this.left = $("#gallery-left");
+        this.right = $("#gallery-right");
+        this.close = $("#gallery-close");
+        this.onResize();
         selected = _.find(this.json, function(obj, id) {
           return id === _this.ids.id;
         });
@@ -76,7 +81,22 @@
 
       GalleryView.prototype.onResize = function() {
         GalleryView.__super__.onResize.call(this);
-        return console.log('GalleryView.onResize:', this.width, this.height);
+        this.gal.css({
+          width: this.width,
+          height: this.height
+        });
+        this.right.css({
+          right: "10px",
+          top: this.height / 2
+        });
+        this.left.css({
+          left: "10px",
+          top: this.height / 2
+        });
+        return this.close.css({
+          left: this.width / 2,
+          top: "10px"
+        });
       };
 
       return GalleryView;

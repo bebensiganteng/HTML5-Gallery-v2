@@ -18,7 +18,7 @@ define [
 
         events:
             "click a#gallery-left":"onLeft"
-            "click a#gallery-up":"onUp"
+            "click a#gallery-close":"onUp"
             "click a#gallery-right":"onRight"
 
         initialize: ->
@@ -32,10 +32,16 @@ define [
             super(@ids)
             $(@el).append template
 
+            @gal    = $("#gallery")
+            @left   = $("#gallery-left")
+            @right  = $("#gallery-right")
+            @close  = $("#gallery-close")
+
+            @onResize()
+
             selected = _.find @json, (obj, id) =>
                 return id == @ids.id
 
-            #console.log selected
             $("#gallery-content").append "<img title='#{selected.phototitle}' src='#{selected.original}' />"
             #$("img").lazyload effect: "fadeIn"
 
@@ -67,9 +73,24 @@ define [
 
             window.location.href = './#gallery/' + page
 
+
         onResize: =>
             super()
 
-            console.log 'GalleryView.onResize:', @width, @height
+            @gal.css
+                width: @width
+                height: @height
+
+            @right.css
+                right: "10px"
+                top: @height/2
+
+            @left.css
+                left: "10px"
+                top: @height/2
+
+            @close.css
+                left: @width/2
+                top: "10px"
 
 

@@ -22,10 +22,7 @@
       BackgroundView.prototype.numClouds = 50;
 
       BackgroundView.prototype.initialize = function() {
-        _.bindAll(this, 'render', 'unrender');
-        this.cloudContainer = $("#background-clouds");
-        this.rainContainer = $("#background-rain");
-        return this.render();
+        return _.bindAll(this, 'render', 'unrender');
       };
 
       BackgroundView.prototype.render = function(ids) {
@@ -33,6 +30,10 @@
 
         this.ids = ids;
         BackgroundView.__super__.render.call(this, this.ids);
+        $(this.el).append("<div id='background'>                <div id='background-clouds'></div>                <div id='background-rain'></div>            </div>");
+        this.bg = $("#background");
+        this.cloudContainer = $("#background-clouds");
+        this.rainContainer = $("#background-rain");
         list = [];
         this.clouds = [];
         for (i = _i = 0, _ref1 = this.numClouds; 0 <= _ref1 ? _i <= _ref1 : _i >= _ref1; i = 0 <= _ref1 ? ++_i : --_i) {

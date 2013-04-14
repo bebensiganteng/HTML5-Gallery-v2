@@ -23,14 +23,18 @@ define [
         initialize: ->
             _.bindAll @, 'render', 'unrender'
 
-            @cloudContainer = $("#background-clouds")
-            @rainContainer  = $("#background-rain")
-
-            @render()
-
         render: (@ids) =>
 
             super(@ids)
+
+            $(@el).append "<div id='background'>
+                <div id='background-clouds'></div>
+                <div id='background-rain'></div>
+            </div>"
+
+            @bg             = $("#background")
+            @cloudContainer = $("#background-clouds")
+            @rainContainer  = $("#background-rain")
 
             list = []
             @clouds = []

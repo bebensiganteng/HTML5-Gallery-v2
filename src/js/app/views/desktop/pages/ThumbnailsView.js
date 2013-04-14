@@ -75,7 +75,7 @@
           height: this.height
         });
         this.initX = (this.width - 150) / 2;
-        this.initY = (this.height - 150) / 2;
+        this.initY = this.height * 0.6;
         this.endX = (this.jsonlength - 1) * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING);
         return _.each(this.thumb, function(obj) {
           if (obj.initX == null) {
@@ -107,6 +107,11 @@
       };
 
       ThumbnailsView.prototype.updatePage = function() {
+        var _this = this;
+
+        _.each(this.thumb, function(obj) {
+          return obj.deselected(_this.ids.id);
+        });
         return this.thumb[this.ids.id].selected(.8);
       };
 
