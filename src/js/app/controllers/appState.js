@@ -23,12 +23,7 @@
         this.setMobile = __bind(this.setMobile, this);
         this.setDesktop = __bind(this.setDesktop, this);        AppState.isDesktop = !AppState.isTablet && !AppState.isMobile;
         this.html = $('html');
-        if (AppState.isMobile || AppState.isTablet) {
-          this.setMobile();
-        }
-        if (AppState.isDesktop) {
-          this.setDesktop();
-        }
+        this.setDesktop();
       }
 
       AppState.prototype.setDesktop = function() {

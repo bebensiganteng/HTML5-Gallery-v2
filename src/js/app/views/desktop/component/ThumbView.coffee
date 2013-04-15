@@ -24,6 +24,7 @@ define [
 
         @THUMB_UPDATE   : 'THUMB_UPDATE'
         @THUMB_SELECTED : 'THUMB_SELECTED'
+        @THUMB_CLICKED  : 'THUMB_CLICKED'
 
         @TWEEN_END      : 'TWEEN_END'
 
@@ -47,19 +48,36 @@ define [
                 <div id='thumbsnails-#{id}'>
                     <div class="thumbsnails-title"><p>#{@obj.phototitle}</p></div>
                     <a href='./#thumbnails/#{id}' target='_self' title='#{@obj.phototitle}'><img src='#{@obj.thumb}' width='150px' height='150px' /></a>
+                    <div id='thumbsnails-bg'></div>
                 </div>
             """
 
         onFileLoad: (e) =>
             #@image = e.result
-            @jel = $("""#thumbsnails-#{@id}""")
-            @jel.on "click", => @clicked = true
+            @thumb.on "click", (e) =>
+                e.preventDefault()
+
+                @clicked = true
+                if Number(@title.css("opacity"))
+                    @transitionOut()
+                else
+                    window.location.href = """./#thumbnails/#{@id}"""
 
         onFileProgress: =>
-            
+
         setPosition: (initX, endX) =>
 
-            @clicked = false
+            @clicked    = false
+
+            @w          = (@width - ThumbView.OBJ_WIDTH) / 2
+            @el         = document.getElementById 'thumbsnails-' + @id
+            @thumb      = $("""#thumbsnails-#{@id}""")
+            @title      = $(".thumbsnails-title", @thumb)
+            @bg         = $("#thumbsnails-bg", @thumb)
+            @center     = initX
+            @initX      = initX + @id * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING)
+            @endX       = @initX - endX
+            #console.log @initX, @endX, @center, @id
 
             unless @image?
                 # @preload = new createjs.LoadQueue()
@@ -70,47 +88,57 @@ define [
                 #debug
                 @onFileLoad()
 
-            @w      = (@width - ThumbView.OBJ_WIDTH) / 2
-            @el     = document.getElementById 'thumbsnails-' + @id
-            @title  = $("""#thumbsnails-#{@id} > div""")
-            @center = initX
-            @initX  = initX + @id * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING)
-            @endX   = @initX - endX
-
             @x = (if (AppState.isIntro) then @endX else @initX)
 
         selected: (d = 1.2) =>
-            @title.transition 
+            @bg.addClass "thumbsnails-selected"
+
+            @title.transition
                 opacity: 1
-                y: -70
-                delay: 1000
+                y: -90
+                delay: 1500
+            , 500, "easeOutBack", =>
+                @trigger ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END
+                @transitionOut() if @clicked
+
+            @bg.transition
+                scale: 1
+                opacity: 1
+                delay: 1500
             , 500, "easeOutBack"
 
             TweenLite.to @, d,
                 onUpdate: @arbitrary
                 x: @center
                 ease: Expo.easeInOut
-                onComplete: =>
-                    @trigger ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END
-                    @transitionOut() if @clicked
 
         deselected: (id) =>
             if @id isnt Number(id)
-                if Number(@title.css("opacity")) is 1
-                    @title.transition 
-                        opacity: 0
-                        y: 0
-                    , 500, "easeInOutExpo"
+                @animateOut() if Number(@title.css("opacity")) is 1
+
+        animateOut: =>
+            @title.transition
+                opacity: 0
+                y: 0
+                delay: 1000
+            , 500, "ease-in-out"
+
+            @bg.transition
+                scale: 0
+                opacity: 1
+                delay: 1000
+            , 500, "ease-in-out", ->
+                @.removeClass "thumbsnails-selected"
 
         # POSITION/ANIMATION
 
         transitionIn: =>
 
         transitionOut: =>
-            # @jel.transition 
-            #     scale: 100
-            # , 500, "ease-in-out"
-            window.location.href = """./#gallery/#{@id}"""
+            @trigger ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, @
+            # console.log "ThumbView.transitionOut"
+            # window.location.href = """./#gallery/#{@id}"""
+
 
         getCenterNormal: =>
             #return Math.abs(@x/@halfWidth)
@@ -136,18 +164,18 @@ define [
 
             @transform @el, @x, @getY(), @getZ(), 0, 1
 
-        # onResize: =>
-        #     super()
-        #     #@halfWidth = (@width/2)
 
         update: (@y, distance = 0, direction = 0, speed = 0 )=>
 
             # if @initX < @endX and @id is 19
             #     @trigger "end"
 
-            @x += direction * (distance + speed)
+            if !@clicked
 
-            @transform @el, @x, @getY(), @getZ(), 0, 1
+                @x += direction * (distance + speed)
+                @transform @el, @x, @getY(), @getZ(), 0, 1
+
+            #@filter @el, @getCenterNormal() * 100
 
 
 

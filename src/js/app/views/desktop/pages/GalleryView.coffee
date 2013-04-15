@@ -26,36 +26,32 @@ define [
 
             @json       = @options.json
             @jsonlength = _.size @json
+            @collection = []
+
+            _.each @json, (obj, id) =>
+                @collection.push obj
+
+        unrender: =>
+            @gal.remove()
 
         render: (@ids) =>
 
             super(@ids)
             $(@el).append template
 
-            @gal    = $("#gallery")
-            @left   = $("#gallery-left")
-            @right  = $("#gallery-right")
-            @close  = $("#gallery-close")
+            @gal        = $("#gallery")
+            @left       = $("#gallery-left")
+            @right      = $("#gallery-right")
+            @close      = $("#gallery-close")
+            @content    = $("#gallery-content")
 
             @onResize()
 
-            selected = _.find @json, (obj, id) =>
-                return id == @ids.id
-
-            $("#gallery-content").append "<img title='#{selected.phototitle}' src='#{selected.original}' />"
-            #$("img").lazyload effect: "fadeIn"
+            @updatePage()
 
         onLeft: (e) =>
             e.preventDefault()
-
-            page = Number(@ids.id)
-
-            if @ids.id is 0
-                page = @jsonlength - 1
-            else
-                page--
-
-            window.location.href = './#gallery/' + page
+            window.location.href = './#gallery/' + @getPrevious()
 
         onUp: (e) =>
             e.preventDefault()
@@ -63,16 +59,22 @@ define [
 
         onRight: (e) =>
             e.preventDefault()
+            window.location.href = './#gallery/' + @getNext()
 
-            page = Number(@ids.id)
+        getPrevious: =>
+            id = Number(@ids.id)
 
-            if @ids.id is @jsonlength - 1
-                page = 0
-            else
-                page++
+            return @jsonlength - 1 if @ids.id is 0
 
-            window.location.href = './#gallery/' + page
+            return id--
 
+
+        getNext: =>
+            id = Number(@ids.id)
+
+            return 0 if @ids.id is @jsonlength - 1
+
+            return id++
 
         onResize: =>
             super()
@@ -82,15 +84,38 @@ define [
                 height: @height
 
             @right.css
-                right: "10px"
-                top: @height/2
+                right: "20px"
+                top: (@height - 46)/2
 
             @left.css
-                left: "10px"
-                top: @height/2
+                left: "20px"
+                top: (@height - 46)/2
 
             @close.css
-                left: @width/2
+                left: (@width - 46)/2
                 top: "10px"
 
+        # TODO: make it like adidas website
+        built: =>
+            #left        = @collection[@getPrevious()] # feature creep
+            selected    = @collection[@ids.id]
+            #right       = @collection[@getNext()]
 
+            return """
+                <img title='#{selected.phototitle}' src='#{selected.original}' />
+            """
+
+        removeSelected: =>
+            child = @content.children()
+
+            $(child).transition
+                opacity: 0
+            , 500, 'ease-in-out', =>
+                $(child).remove()
+                @content.append @built()
+
+        updatePage: =>
+            if @content.children().length > 0
+                @removeSelected()
+            else
+                @content.append @built()

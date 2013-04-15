@@ -17,7 +17,7 @@
         'libs/pixi': 'libs/pixi',
         'libs/backbone': 'libs/backbone-min',
         'libs/underscore': 'libs/underscore-min',
-        'libs/jquery.transit': 'libs/jquery.transit.min',
+        'libs/jquery.transit': 'libs/jquery.transit',
         'libs/stately': 'libs/Stately',
         'libs/preloadjs': 'libs/preloadjs-0.3.0.min',
         'libs/jquery.lazyload': 'libs/jquery.lazyload.min',

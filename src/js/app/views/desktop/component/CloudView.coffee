@@ -20,6 +20,8 @@ define [
 
             @id = Number(id)
 
+
+
             return """
                 <div id="cloud-#{@id}">
                     <img src="images/bg/cloud.png" width="256" height="256"></div>
@@ -30,11 +32,14 @@ define [
 
             browser = $.keyframe.browserCode();
 
-            x  = Math.random() * @width - 100
+            #console.log "CloudView.addKeyframe:", @height
+
+            x  = Math.random() * @width
             y  = Math.random() * ( @height * 0.2 ) - 150
             z  = -500 * Math.random()
             r  = Math.random() * 360
 
+            #TODO: Create bulk addKeyFrame
             $.fn.addKeyframe [
 
                 name: """cloudkey-#{@id}"""
@@ -61,11 +66,7 @@ define [
 
             @keyframe = true
 
-        setPositions: =>
-
-            $.keyframe.removeHead()
-            @addKeyframe()
-            
+        playKeyframe: =>
             $('#cloud-' + @id).playKeyframe
                 name: """cloudkey-#{@id}"""
                 duration: Math.random() * 30000 + 10000

@@ -96,7 +96,8 @@ define [
             if @machine.getMachineState().toLowerCase() is subid
                 @platform.updatePage()
             else
-                @machine[subid]()
+                unless @machine[subid]?()
+                    window.location.href = "./#thumbnails/0"
 
         scrollUp: =>
             $("html, body").animate scrollTop: "0px", 500

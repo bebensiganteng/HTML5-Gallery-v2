@@ -63,53 +63,67 @@
       };
 
       DesktopView.prototype.onStateChange = function(event, oldState, newState) {
-        DesktopView.__super__.onStateChange.call(this, event, oldState, newState);
         this.currentPage = newState;
         if (newState === "GALLERY") {
-          return this.pages.BACKGROUND.unrender();
+          this.pages.BACKGROUND.unrender();
         } else {
-          return this.pages.BACKGROUND.render();
+          this.pages.BACKGROUND.render();
         }
+        return DesktopView.__super__.onStateChange.call(this, event, oldState, newState);
       };
 
       DesktopView.prototype.onResize = function() {
-        DesktopView.__super__.onResize.call(this);
-        return this.pages[this.currentPage].onResize();
+        if (this.currentPage) {
+          return this.pages[this.currentPage].onResize();
+        }
       };
 
       DesktopView.prototype.animate = function() {
-        DesktopView.__super__.animate.call(this);
         if (this.currentPage) {
           return this.pages[this.currentPage].animate();
         }
       };
 
       DesktopView.prototype.playIntro = function() {
-        return this.pages[this.currentPage].playIntro();
+        if (this.currentPage) {
+          return this.pages[this.currentPage].playIntro();
+        }
       };
 
       DesktopView.prototype.onMouseDown = function(e) {
-        return this.pages[this.currentPage].onMouseDown(e);
+        if (this.currentPage) {
+          return this.pages[this.currentPage].onMouseDown(e);
+        }
       };
 
       DesktopView.prototype.onMouseMove = function(e) {
-        return this.pages[this.currentPage].onMouseMove(e);
+        if (this.currentPage) {
+          return this.pages[this.currentPage].onMouseMove(e);
+        }
       };
 
       DesktopView.prototype.onMouseUp = function(e) {
-        return this.pages[this.currentPage].onMouseUp(e);
+        if (this.currentPage) {
+          return this.pages[this.currentPage].onMouseUp(e);
+        }
       };
 
       DesktopView.prototype.onTouchStart = function(e) {
-        return this.pages[this.currentPage].onTouchStart(e);
+        if (this.currentPage) {
+          return this.pages[this.currentPage].onTouchStart(e);
+        }
       };
 
       DesktopView.prototype.onTouchMove = function(e) {
-        return this.pages[this.currentPage].onTouchMove(e);
+        if (this.currentPage) {
+          return this.pages[this.currentPage].onTouchMove(e);
+        }
       };
 
       DesktopView.prototype.onTouchEnd = function(e) {
-        return this.pages[this.currentPage].onTouchEnd(e);
+        if (this.currentPage) {
+          return this.pages[this.currentPage].onTouchEnd(e);
+        }
       };
 
       return DesktopView;

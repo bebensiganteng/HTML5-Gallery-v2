@@ -25,8 +25,11 @@ define [
 
             @html = $ 'html'
             
-            @setMobile() if AppState.isMobile or AppState.isTablet
-            @setDesktop() if AppState.isDesktop
+            # @setMobile() if AppState.isMobile or AppState.isTablet
+            # @setDesktop() if AppState.isDesktop
+
+            # Depends on the design set it to mobile or desktop
+            @setDesktop()
 
         setDesktop: =>
             @html.addClass 'desktop'

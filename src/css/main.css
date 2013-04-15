@@ -4,13 +4,24 @@ ol,ul{list-style:none}
 table{border-collapse:separate;border-spacing:0;vertical-align:middle}
 caption,th,td{text-align:left;font-weight:normal;vertical-align:middle}
 a img{border:none}
-@import url("http://fonts.googleapis.com/css?family=RobotoCondensed");
-html,body{overflow:hidden;font-family:'Roboto Condensed',sans-serif}
+#circular{width:238px;height:238px;background:url("../images/main/sprites.png") 0 0 no-repeat}
+#thumbnails-header{width:112px;height:34px;background:url("../images/main/sprites.png") -238px 0 no-repeat}
+#thumbnails-about{width:11px;height:82px;background:url("../images/main/sprites.png") -238px -34px no-repeat}
+#arrowwhite{width:34px;height:22px;background:url("../images/main/sprites.png") -249px -80px no-repeat}
+@import url("http://fonts.googleapis.com/css?family=PT+Sans");
+html,body{overflow:hidden}
+p{font-family:'PT Sans',sans-serif;font-weight:400}
 #content{background:url("../images/bg/sky.jpg") top left no-repeat;-webkit-background-size:100% 100%;-moz-background-size:100% 100%;background-size:100% 100%}
 .desktop #gallery{background-color:#000;}
 .desktop #gallery a{position:absolute}
 .desktop #gallery-content{text-align:center;}
 .desktop #gallery-content img{width:auto;height:100%}
+.desktop a#gallery-left{width:46px;height:46px;background:url("../images/main/sprites.png") -238px -116px no-repeat;}
+.desktop a#gallery-left:hover{background:url("../images/main/sprites.png") -249px -34px no-repeat}
+.desktop a#gallery-right{width:46px;height:46px;background:url("../images/main/sprites.png") -295px -34px no-repeat;}
+.desktop a#gallery-right:hover{background:url("../images/main/sprites.png") -284px -116px no-repeat}
+.desktop a#gallery-close{width:46px;height:46px;background:url("../images/main/sprites.png") -284px -162px no-repeat;}
+.desktop a#gallery-close:hover{background:url("../images/main/sprites.png") -238px -162px no-repeat}
 .desktop #thumbnails{white-space:nowrap;position:relative;-webkit-perspective:400;-moz-perspective:400;-ms-perspective:400;perspective:400;}
 .desktop #thumbnails #thumbnails-group{-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;-o-transform-style:preserve-3d;-ms-transform-style:preserve-3d;transform-style:preserve-3d;}
 .desktop #thumbnails #thumbnails-group > div{display:inline-block;width:150px;height:150px;position:absolute;}
@@ -18,6 +29,11 @@ html,body{overflow:hidden;font-family:'Roboto Condensed',sans-serif}
 .desktop #thumbnails #thumbnails-group > div:first-child{margin-left:0}
 .desktop .thumbsnails-title{margin:0 0 70px -50%;position:absolute;opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";width:300px;}
 .desktop .thumbsnails-title p{text-align:center;color:#fff;font-size:24px}
+.desktop #thumbnails-header{position:absolute;top:35px;left:50%;margin-left:-56px}
+.desktop #thumbnails-about{position:absolute;bottom:0;left:50%}
+.desktop #thumbsnails-bg{position:absolute;left:-44px;top:-44px;z-index:-10}
+.desktop .thumbsnails-selected{-webkit-transform:scale(0,0);-moz-transform:scale(0,0);-o-transform:scale(0,0);-ms-transform:scale(0,0);transform:scale(0,0);opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";width:238px;height:238px;background:url("../images/main/sprites.png") 0 0 no-repeat}
+.desktop #thumbnails-black{background-color:#000;position:absolute;-webkit-transform:translateZ(-10px) scale(1.2,1.2);-moz-transform:translateZ(-10px) scale(1.2,1.2);-o-transform:translateZ(-10px) scale(1.2,1.2);-ms-transform:translateZ(-10px) scale(1.2,1.2);transform:translateZ(-10px) scale(1.2,1.2);opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"}
 #background{-webkit-perspective:400;-moz-perspective:400;-ms-perspective:400;perspective:400}
 #background-clouds{-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;-o-transform-style:preserve-3d;-ms-transform-style:preserve-3d;transform-style:preserve-3d;}
 #background-clouds > div{width:256px;height:256px;position:absolute}

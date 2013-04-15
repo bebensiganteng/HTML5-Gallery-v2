@@ -19,6 +19,7 @@
         this.getCenterNormal = __bind(this.getCenterNormal, this);
         this.transitionOut = __bind(this.transitionOut, this);
         this.transitionIn = __bind(this.transitionIn, this);
+        this.animateOut = __bind(this.animateOut, this);
         this.deselected = __bind(this.deselected, this);
         this.selected = __bind(this.selected, this);
         this.setPosition = __bind(this.setPosition, this);
@@ -31,6 +32,8 @@
       ThumbView.THUMB_UPDATE = 'THUMB_UPDATE';
 
       ThumbView.THUMB_SELECTED = 'THUMB_SELECTED';
+
+      ThumbView.THUMB_CLICKED = 'THUMB_CLICKED';
 
       ThumbView.TWEEN_END = 'TWEEN_END';
 
@@ -49,15 +52,20 @@
       ThumbView.prototype.built = function(obj, id) {
         this.obj = obj;
         this.id = Number(id);
-        return "<div id='thumbsnails-" + id + "'>\n    <div class=\"thumbsnails-title\"><p>" + this.obj.phototitle + "</p></div>\n    <a href='./#thumbnails/" + id + "' target='_self' title='" + this.obj.phototitle + "'><img src='" + this.obj.thumb + "' width='150px' height='150px' /></a>\n</div>";
+        return "<div id='thumbsnails-" + id + "'>\n    <div class=\"thumbsnails-title\"><p>" + this.obj.phototitle + "</p></div>\n    <a href='./#thumbnails/" + id + "' target='_self' title='" + this.obj.phototitle + "'><img src='" + this.obj.thumb + "' width='150px' height='150px' /></a>\n    <div id='thumbsnails-bg'></div>\n</div>";
       };
 
       ThumbView.prototype.onFileLoad = function(e) {
         var _this = this;
 
-        this.jel = $("#thumbsnails-" + this.id);
-        return this.jel.on("click", function() {
-          return _this.clicked = true;
+        return this.thumb.on("click", function(e) {
+          e.preventDefault();
+          _this.clicked = true;
+          if (Number(_this.title.css("opacity"))) {
+            return _this.transitionOut();
+          } else {
+            return window.location.href = "./#thumbnails/" + _this.id;
+          }
         });
       };
 
@@ -65,15 +73,17 @@
 
       ThumbView.prototype.setPosition = function(initX, endX) {
         this.clicked = false;
-        if (this.image == null) {
-          this.onFileLoad();
-        }
         this.w = (this.width - ThumbView.OBJ_WIDTH) / 2;
         this.el = document.getElementById('thumbsnails-' + this.id);
-        this.title = $("#thumbsnails-" + this.id + " > div");
+        this.thumb = $("#thumbsnails-" + this.id);
+        this.title = $(".thumbsnails-title", this.thumb);
+        this.bg = $("#thumbsnails-bg", this.thumb);
         this.center = initX;
         this.initX = initX + this.id * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING);
         this.endX = this.initX - endX;
+        if (this.image == null) {
+          this.onFileLoad();
+        }
         return this.x = (AppState.isIntro ? this.endX : this.initX);
       };
 
@@ -83,39 +93,56 @@
         if (d == null) {
           d = 1.2;
         }
+        this.bg.addClass("thumbsnails-selected");
         this.title.transition({
           opacity: 1,
-          y: -70,
-          delay: 1000
+          y: -90,
+          delay: 1500
+        }, 500, "easeOutBack", function() {
+          _this.trigger(ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END);
+          if (_this.clicked) {
+            return _this.transitionOut();
+          }
+        });
+        this.bg.transition({
+          scale: 1,
+          opacity: 1,
+          delay: 1500
         }, 500, "easeOutBack");
         return TweenLite.to(this, d, {
           onUpdate: this.arbitrary,
           x: this.center,
-          ease: Expo.easeInOut,
-          onComplete: function() {
-            _this.trigger(ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END);
-            if (_this.clicked) {
-              return _this.transitionOut();
-            }
-          }
+          ease: Expo.easeInOut
         });
       };
 
       ThumbView.prototype.deselected = function(id) {
         if (this.id !== Number(id)) {
           if (Number(this.title.css("opacity")) === 1) {
-            return this.title.transition({
-              opacity: 0,
-              y: 0
-            }, 500, "easeInOutExpo");
+            return this.animateOut();
           }
         }
+      };
+
+      ThumbView.prototype.animateOut = function() {
+        this.title.transition({
+          opacity: 0,
+          y: 0,
+          delay: 1000
+        }, 500, "ease-in-out");
+        return this.bg.transition({
+          scale: 0,
+          opacity: 1,
+          delay: 1000
+        }, 500, "ease-in-out", function() {
+          return this.removeClass("thumbsnails-selected");
+        });
       };
 
       ThumbView.prototype.transitionIn = function() {};
 
       ThumbView.prototype.transitionOut = function() {
-        return window.location.href = "./#gallery/" + this.id;
+        return this.trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, this);
       };
 
       ThumbView.prototype.getCenterNormal = function() {
@@ -155,8 +182,10 @@
         if (speed == null) {
           speed = 0;
         }
-        this.x += direction * (distance + speed);
-        return this.transform(this.el, this.x, this.getY(), this.getZ(), 0, 1);
+        if (!this.clicked) {
+          this.x += direction * (distance + speed);
+          return this.transform(this.el, this.x, this.getY(), this.getZ(), 0, 1);
+        }
       };
 
       return ThumbView;

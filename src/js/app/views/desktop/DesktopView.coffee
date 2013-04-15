@@ -43,50 +43,49 @@ define [
 
         setIds: (@ids) =>
             _.each @pages, (obj) => obj.setIds @ids
-            
+
         onStateChange: (event, oldState, newState) =>
-            super(event, oldState, newState)
 
             @currentPage = newState
 
             if newState is "GALLERY"
                 @pages.BACKGROUND.unrender()
             else
-                @pages.BACKGROUND.render()   
+                @pages.BACKGROUND.render()
+
+            super(event, oldState, newState)
 
 
         onResize: =>
-            super()
-            @pages[@currentPage].onResize()
+            @pages[@currentPage].onResize() if @currentPage
 
         animate: =>
-            super()
             @pages[@currentPage].animate() if @currentPage
 
         playIntro: =>
-            @pages[@currentPage].playIntro()
+            @pages[@currentPage].playIntro() if @currentPage
 
         # DESKTOP
 
         onMouseDown: (e) =>
-            @pages[@currentPage].onMouseDown(e)
+            @pages[@currentPage].onMouseDown(e) if @currentPage
 
         onMouseMove: (e) =>
-            @pages[@currentPage].onMouseMove(e)
+            @pages[@currentPage].onMouseMove(e) if @currentPage
 
         onMouseUp: (e) =>
-            @pages[@currentPage].onMouseUp(e)
+            @pages[@currentPage].onMouseUp(e) if @currentPage
 
         # MOBILE
 
         onTouchStart: (e) =>
-            @pages[@currentPage].onTouchStart(e)
+            @pages[@currentPage].onTouchStart(e) if @currentPage
 
         onTouchMove: (e) =>
-            @pages[@currentPage].onTouchMove(e)
+            @pages[@currentPage].onTouchMove(e) if @currentPage
 
         onTouchEnd: (e) =>
-            @pages[@currentPage].onTouchEnd(e)
+            @pages[@currentPage].onTouchEnd(e) if @currentPage
 
 
 

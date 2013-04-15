@@ -87,6 +87,8 @@
       };
 
       AppView.prototype.onHashChanged = function(subid, id) {
+        var _base;
+
         this.platform.setIds({
           subid: subid,
           id: id
@@ -94,7 +96,9 @@
         if (this.machine.getMachineState().toLowerCase() === subid) {
           return this.platform.updatePage();
         } else {
-          return this.machine[subid]();
+          if (!(typeof (_base = this.machine)[subid] === "function" ? _base[subid]() : void 0)) {
+            return window.location.href = "./#thumbnails/0";
+          }
         }
       };
 

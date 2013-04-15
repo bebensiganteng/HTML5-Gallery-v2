@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'views/PageView', 'views/desktop/component/CloudView', 'controllers/AppState'], function($, _b, _u, PageView, CloudView, AppState) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'views/PageView', 'views/desktop/component/CloudView', 'controllers/AppState', 'libs/jquery.keyframes'], function($, _b, _u, PageView, CloudView, AppState, _k) {
     var BackgroundView, _ref;
 
     return BackgroundView = (function(_super) {
@@ -13,7 +13,8 @@
         this.animate = __bind(this.animate, this);
         this.playIntro = __bind(this.playIntro, this);
         this.onResize = __bind(this.onResize, this);
-        this.render = __bind(this.render, this);        _ref = BackgroundView.__super__.constructor.apply(this, arguments);
+        this.render = __bind(this.render, this);
+        this.unrender = __bind(this.unrender, this);        _ref = BackgroundView.__super__.constructor.apply(this, arguments);
         return _ref;
       }
 
@@ -23,6 +24,10 @@
 
       BackgroundView.prototype.initialize = function() {
         return _.bindAll(this, 'render', 'unrender');
+      };
+
+      BackgroundView.prototype.unrender = function() {
+        return this.bg.remove();
       };
 
       BackgroundView.prototype.render = function(ids) {
@@ -49,9 +54,14 @@
         var _this = this;
 
         BackgroundView.__super__.onResize.call(this);
-        return _.each(this.clouds, function(obj) {
+        $.keyframe.removeHead();
+        _.each(this.clouds, function(obj) {
           obj.onResize();
-          return obj.setPositions();
+          return obj.addKeyframe();
+        });
+        $.keyframe.generate();
+        return _.each(this.clouds, function(obj) {
+          return obj.playKeyframe();
         });
       };
 

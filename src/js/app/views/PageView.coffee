@@ -30,12 +30,12 @@ define [
             #$("img").lazyload effect: "fadeIn"
 
         unrender: =>
-            child = $(@el).children().first()
+            $(@el).children().first().remove()
 
-            if child
-                $(child).transition
-                    opacity: 0
-                , 500, 'ease-in-out', -> $(@).remove()
+            # if child
+            #     $(child).transition
+            #         opacity: 0
+            #     , 500, 'ease-in-out', -> $(@).remove()
 
         render: (@ids) =>
             $(@el).css(opacity:0)
@@ -57,7 +57,6 @@ define [
             console.log "PageView.updatePage"
 
         animate: =>
-            #console.log 'PageView.animate'
 
         onResize: =>
             @width  = $(window).outerWidth()
@@ -102,6 +101,9 @@ define [
         onTouchEnd: (e) =>
 
         #CSS3
+
+        filter: (elem, p) =>
+            elem.style[AppState.browser + 'filter'] = """grayscale(#{p}%)"""
 
         transform: (elem, x, y, z = 0, r = 0, s = 1) =>
 

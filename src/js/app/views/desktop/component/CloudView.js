@@ -11,7 +11,7 @@
 
       function CloudView() {
         this.playIntro = __bind(this.playIntro, this);
-        this.setPositions = __bind(this.setPositions, this);
+        this.playKeyframe = __bind(this.playKeyframe, this);
         this.addKeyframe = __bind(this.addKeyframe, this);
         this.built = __bind(this.built, this);        _ref = CloudView.__super__.constructor.apply(this, arguments);
         return _ref;
@@ -26,7 +26,7 @@
         var browser, r, x, y, z;
 
         browser = $.keyframe.browserCode();
-        x = Math.random() * this.width - 100;
+        x = Math.random() * this.width;
         y = Math.random() * (this.height * 0.2) - 150;
         z = -500 * Math.random();
         r = Math.random() * 360;
@@ -42,9 +42,7 @@
         return this.keyframe = true;
       };
 
-      CloudView.prototype.setPositions = function() {
-        $.keyframe.removeHead();
-        this.addKeyframe();
+      CloudView.prototype.playKeyframe = function() {
         return $('#cloud-' + this.id).playKeyframe({
           name: "cloudkey-" + this.id,
           duration: Math.random() * 30000 + 10000,

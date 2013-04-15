@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/tweenlite', 'libs/easepack', 'controllers/AppState', 'views/PageView', 'views/desktop/component/ThumbView', 'text!templates/desktop/thumbnails.html'], function($, _b, _u, _t, _e, AppState, PageView, ThumbView, template) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/tweenlite', 'libs/easepack', 'libs/jquery.transit', 'libs/preloadjs', 'controllers/AppState', 'views/PageView', 'views/desktop/component/ThumbView', 'text!templates/desktop/thumbnails.html'], function($, _b, _u, _t, _e, _tr, _p, AppState, PageView, ThumbView, template) {
     var ThumbnailsView, _ref;
 
     return ThumbnailsView = (function(_super) {
@@ -20,7 +20,8 @@
         this.updatePage = __bind(this.updatePage, this);
         this.onThumbUpdate = __bind(this.onThumbUpdate, this);
         this.onResize = __bind(this.onResize, this);
-        this.render = __bind(this.render, this);        _ref = ThumbnailsView.__super__.constructor.apply(this, arguments);
+        this.render = __bind(this.render, this);
+        this.unrender = __bind(this.unrender, this);        _ref = ThumbnailsView.__super__.constructor.apply(this, arguments);
         return _ref;
       }
 
@@ -36,6 +37,10 @@
         ThumbnailsView.__super__.initialize.call(this);
         this.json = this.options.json;
         return this.jsonlength = _.size(this.json);
+      };
+
+      ThumbnailsView.prototype.unrender = function() {
+        return this.th.remove();
       };
 
       ThumbnailsView.prototype.render = function(ids) {
@@ -55,13 +60,16 @@
           list.push(thumb.built(obj, id));
           return _this.thumb.push(thumb);
         });
+        list.push("<div id='thumbnails-black'></div>");
         list.push("</div>");
         this.th.append(list.join(''));
         this.drag = false;
-        this.direction = 0;
+        this.d0 = this.d1 = 0;
         this.x0 = this.x1 = 0;
         this.speed = 0;
         this.outOfBounds = false;
+        this.black = $("#thumbnails-black");
+        this.black.hide();
         this.onResize();
         return this.updatePage();
       };
@@ -71,6 +79,10 @@
 
         ThumbnailsView.__super__.onResize.call(this);
         this.th.css({
+          width: this.width,
+          height: this.height
+        });
+        this.black.css({
           width: this.width,
           height: this.height
         });
@@ -103,6 +115,12 @@
             if (AppState.isIntro) {
               return AppState.isIntro = false;
             }
+            break;
+          case ThumbView.THUMB_CLICKED:
+            this.black.show().transition({
+              opacity: 1
+            }, 1000, "ease-in-out");
+            return sel.id;
         }
       };
 
@@ -116,24 +134,21 @@
       };
 
       ThumbnailsView.prototype.animate = function() {
-        var distance,
-          _this = this;
+        var distance;
 
         if (this.x0) {
           distance = Math.abs(this.x1 - this.x0);
           if (distance > 0) {
             this.speed += this.acc;
           }
-          if (distance === 0 && this.speed > 0) {
+          if (distance === 0) {
             this.speed -= this.dec;
           }
-          if (this.speed < 0) {
+          if (this.speed < 0 || this.d1 !== this.d0) {
             this.speed = 0;
           }
-          _.each(this.thumb, function(obj) {
-            return obj.update(_this.initY, distance, _this.direction, _this.speed);
-          });
-          return this.x0 = this.x1;
+          this.x0 = this.x1;
+          return this.d1 = this.d0;
         }
       };
 
@@ -147,7 +162,7 @@
 
       ThumbnailsView.prototype.onMouseMove = function(e) {
         if (this.drag) {
-          this.direction = (e.pageX > this.x1 ? 1 : -1);
+          this.d0 = (e.pageX > this.x1 ? 1 : -1);
           return this.x1 = e.pageX;
         }
       };

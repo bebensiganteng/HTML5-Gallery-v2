@@ -11,6 +11,7 @@
 
       function PageView() {
         this.transform = __bind(this.transform, this);
+        this.filter = __bind(this.filter, this);
         this.onTouchEnd = __bind(this.onTouchEnd, this);
         this.onTouchMove = __bind(this.onTouchMove, this);
         this.onTouchStart = __bind(this.onTouchStart, this);
@@ -41,16 +42,7 @@
       };
 
       PageView.prototype.unrender = function() {
-        var child;
-
-        child = $(this.el).children().first();
-        if (child) {
-          return $(child).transition({
-            opacity: 0
-          }, 500, 'ease-in-out', function() {
-            return $(this).remove();
-          });
-        }
+        return $(this.el).children().first().remove();
       };
 
       PageView.prototype.render = function(ids) {
@@ -119,6 +111,10 @@
       PageView.prototype.onTouchMove = function(e) {};
 
       PageView.prototype.onTouchEnd = function(e) {};
+
+      PageView.prototype.filter = function(elem, p) {
+        return elem.style[AppState.browser + 'filter'] = "grayscale(" + p + "%)";
+      };
 
       PageView.prototype.transform = function(elem, x, y, z, r, s) {
         if (z == null) {

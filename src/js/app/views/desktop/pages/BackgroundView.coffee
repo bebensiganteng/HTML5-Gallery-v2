@@ -5,6 +5,7 @@ define [
     'views/PageView'
     'views/desktop/component/CloudView'
     'controllers/AppState'
+    'libs/jquery.keyframes'
     ], (
     $
     _b
@@ -12,6 +13,7 @@ define [
     PageView
     CloudView
     AppState
+    _k
     ) ->
 
     class BackgroundView extends PageView
@@ -22,6 +24,9 @@ define [
 
         initialize: ->
             _.bindAll @, 'render', 'unrender'
+
+        unrender: =>
+            @bg.remove()
 
         render: (@ids) =>
 
@@ -50,12 +55,20 @@ define [
 
             @onResize()
 
+
         onResize: =>
             super()
 
+            $.keyframe.removeHead()
+
             _.each @clouds, (obj) =>
                 obj.onResize()
-                obj.setPositions()
+                obj.addKeyframe()
+
+            $.keyframe.generate()
+
+            _.each @clouds, (obj) =>
+                obj.playKeyframe()
 
         playIntro: =>
             console.log "BackgroundView.playIntro:", AppState.isIntro

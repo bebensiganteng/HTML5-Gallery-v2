@@ -21,6 +21,7 @@ $.keyframe = {
 	generate: function(){
 		$('#keyframes-style').html('');
 		var browserType = this.browserCode();
+		var list = []
 		
 		for(var frameName in $.frameCollection){
 			var css = '@'+browserType+'keyframes '+frameName+'{';
@@ -32,15 +33,19 @@ $.keyframe = {
 					css += fd[frameData] + '}';
 				}
 			}
-			
+
 			css += '}\n';
-				
-			$('#keyframes-style').append(css);
+
+			list.push(css)
 		}
-		$('#keyframes-style').append(' .boostKeyframe{transform:scale3d(1,1,1);}');
+
+		list.push(' .boostKeyframe{transform:scale3d(1,1,1);}')
+
+		$('#keyframes-style').append(list.join(""));
 	},
 
 	removeHead: function(){
+		console.log("removeHead")
 		$('#keyframes-style').children().remove();
 	},
 };
@@ -73,7 +78,9 @@ $.fn.addKeyframe = function(frameData){
 		data.name = '';
 		$.frameCollection[kfname] = {data: data};
 	});
-	$.keyframe.generate();
+	
+	// Not good for multiple add ons
+	//$.keyframe.generate();
 };
 
 $.fn.playKeyframe = function(frameOptions, callback){
