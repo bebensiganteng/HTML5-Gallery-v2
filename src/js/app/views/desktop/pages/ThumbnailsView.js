@@ -25,9 +25,9 @@
         return _ref;
       }
 
-      ThumbnailsView.prototype.acc = .5;
+      ThumbnailsView.prototype.acc = .2;
 
-      ThumbnailsView.prototype.dec = .2;
+      ThumbnailsView.prototype.dec = .1;
 
       ThumbnailsView.prototype.outOfBounds = null;
 
@@ -117,10 +117,14 @@
             }
             break;
           case ThumbView.THUMB_CLICKED:
-            this.black.show().transition({
+            AppState.isPaused = true;
+            return this.black.show().transition({
               opacity: 1
-            }, 1000, "ease-in-out");
-            return sel.id;
+            }, 1000, "ease-in-out", function() {
+              return setTimeout(function() {
+                return window.location.href = './#gallery/' + sel.id;
+              }, 2000);
+            });
         }
       };
 
@@ -134,7 +138,8 @@
       };
 
       ThumbnailsView.prototype.animate = function() {
-        var distance;
+        var distance,
+          _this = this;
 
         if (this.x0) {
           distance = Math.abs(this.x1 - this.x0);
@@ -147,6 +152,13 @@
           if (this.speed < 0 || this.d1 !== this.d0) {
             this.speed = 0;
           }
+          if (this.thumb[0].x > this.thumb[0].initX || this.thumb[0].x < this.thumb[0].endX) {
+            this.speed = 0;
+            distance *= 0.1;
+          }
+          _.each(this.thumb, function(obj) {
+            return obj.update(_this.initY, distance, _this.d0, _this.speed);
+          });
           this.x0 = this.x1;
           return this.d1 = this.d0;
         }
@@ -168,14 +180,34 @@
       };
 
       ThumbnailsView.prototype.onMouseUp = function(e) {
-        return this.drag = false;
+        this.drag = false;
+        if (this.thumb[0].x > this.thumb[0].initX) {
+          this.thumb[0].selected(.4, false, false);
+        }
+        if (this.thumb[0].x < this.thumb[0].endX) {
+          return this.thumb[this.jsonlength - 1].selected(.4, false, false);
+        }
       };
 
-      ThumbnailsView.prototype.onTouchStart = function(e) {};
+      ThumbnailsView.prototype.onTouchStart = function(e) {
+        if (!AppState.isIntro && !this.onTween) {
+          this.drag = true;
+          this.x0 = this.x1 = e.pageX;
+          return this.speed = 0;
+        }
+      };
 
-      ThumbnailsView.prototype.onTouchMove = function(e) {};
+      ThumbnailsView.prototype.onTouchMove = function(e) {
+        if (this.drag) {
+          this.d0 = (e.pageX > this.x1 ? 1 : -1);
+          this.x1 = e.pageX;
+          return this.animate();
+        }
+      };
 
-      ThumbnailsView.prototype.onTouchEnd = function(e) {};
+      ThumbnailsView.prototype.onTouchEnd = function(e) {
+        return this.drag = false;
+      };
 
       return ThumbnailsView;
 

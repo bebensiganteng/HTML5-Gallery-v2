@@ -60,7 +60,10 @@ define [
             @pages[@currentPage].onResize() if @currentPage
 
         animate: =>
-            @pages[@currentPage].animate() if @currentPage
+            if @currentPage
+                @pages[@currentPage].animate()
+
+                @pages.BACKGROUND.animate() if @currentPage is "THUMBNAILS"
 
         playIntro: =>
             @pages[@currentPage].playIntro() if @currentPage

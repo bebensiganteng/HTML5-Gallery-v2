@@ -7,24 +7,28 @@ a img{border:none}
 #circular{width:238px;height:238px;background:url("../images/main/sprites.png") 0 0 no-repeat}
 #thumbnails-header{width:112px;height:34px;background:url("../images/main/sprites.png") -238px 0 no-repeat}
 #thumbnails-about{width:11px;height:82px;background:url("../images/main/sprites.png") -238px -34px no-repeat}
-#arrowwhite{width:34px;height:22px;background:url("../images/main/sprites.png") -249px -80px no-repeat}
 @import url("http://fonts.googleapis.com/css?family=PT+Sans");
 html,body{overflow:hidden}
 p{font-family:'PT Sans',sans-serif;font-weight:400}
 #content{background:url("../images/bg/sky.jpg") top left no-repeat;-webkit-background-size:100% 100%;-moz-background-size:100% 100%;background-size:100% 100%}
+#preloader{position:absolute;margin-left:-30px;top:50%;left:50%}
 .desktop #gallery{background-color:#000;}
 .desktop #gallery a{position:absolute}
 .desktop #gallery-content{text-align:center;}
 .desktop #gallery-content img{width:auto;height:100%}
-.desktop a#gallery-left{width:46px;height:46px;background:url("../images/main/sprites.png") -238px -116px no-repeat;}
+.desktop #gallery-thumbleft,.desktop #gallery-thumbright{position:absolute;margin-top:-52px;-webkit-transform:scale(.5,.5);-moz-transform:scale(.5,.5);-o-transform:scale(.5,.5);-ms-transform:scale(.5,.5);transform:scale(.5,.5);opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";}
+.desktop #gallery-thumbleft img,.desktop #gallery-thumbright img{-webkit-border-radius:75px;border-radius:75px;border:4px solid #fff}
+.desktop a#gallery-left{width:54px;height:54px;background:url("../images/main/sprites.png") -292px -116px no-repeat;}
 .desktop a#gallery-left:hover{background:url("../images/main/sprites.png") -249px -34px no-repeat}
-.desktop a#gallery-right{width:46px;height:46px;background:url("../images/main/sprites.png") -295px -34px no-repeat;}
-.desktop a#gallery-right:hover{background:url("../images/main/sprites.png") -284px -116px no-repeat}
-.desktop a#gallery-close{width:46px;height:46px;background:url("../images/main/sprites.png") -284px -162px no-repeat;}
-.desktop a#gallery-close:hover{background:url("../images/main/sprites.png") -238px -162px no-repeat}
+.desktop a#gallery-right{width:54px;height:54px;background:url("../images/main/sprites.png") -238px -116px no-repeat;}
+.desktop a#gallery-right:hover{background:url("../images/main/sprites.png") -238px -170px no-repeat}
+.desktop a#gallery-close{width:54px;height:54px;background:url("../images/main/sprites.png") 0 -238px no-repeat;}
+.desktop a#gallery-close:hover{background:url("../images/main/sprites.png") -292px -170px no-repeat}
+.desktop #gallery-preload{position:absolute;left:50%;top:50%;margin:-10px 0 0 -100px;color:#fff;font-size:18px;width:200px;text-align:center}
 .desktop #thumbnails{white-space:nowrap;position:relative;-webkit-perspective:400;-moz-perspective:400;-ms-perspective:400;perspective:400;}
 .desktop #thumbnails #thumbnails-group{-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;-o-transform-style:preserve-3d;-ms-transform-style:preserve-3d;transform-style:preserve-3d;}
 .desktop #thumbnails #thumbnails-group > div{display:inline-block;width:150px;height:150px;position:absolute;}
+.desktop #thumbnails #thumbnails-group > div a{opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"}
 .desktop #thumbnails #thumbnails-group > div img{-webkit-border-radius:75px;border-radius:75px;-webkit-box-shadow:0 0 5px #000;box-shadow:0 0 5px #000}
 .desktop #thumbnails #thumbnails-group > div:first-child{margin-left:0}
 .desktop .thumbsnails-title{margin:0 0 70px -50%;position:absolute;opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";width:300px;}
@@ -34,6 +38,8 @@ p{font-family:'PT Sans',sans-serif;font-weight:400}
 .desktop #thumbsnails-bg{position:absolute;left:-44px;top:-44px;z-index:-10}
 .desktop .thumbsnails-selected{-webkit-transform:scale(0,0);-moz-transform:scale(0,0);-o-transform:scale(0,0);-ms-transform:scale(0,0);transform:scale(0,0);opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";width:238px;height:238px;background:url("../images/main/sprites.png") 0 0 no-repeat}
 .desktop #thumbnails-black{background-color:#000;position:absolute;-webkit-transform:translateZ(-10px) scale(1.2,1.2);-moz-transform:translateZ(-10px) scale(1.2,1.2);-o-transform:translateZ(-10px) scale(1.2,1.2);-ms-transform:translateZ(-10px) scale(1.2,1.2);transform:translateZ(-10px) scale(1.2,1.2);opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"}
+.desktop .thumbnails-arrow{position:absolute;left:58px;top:0;opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";width:34px;height:22px;background:url("../images/main/sprites.png") -303px -34px no-repeat}
 #background{-webkit-perspective:400;-moz-perspective:400;-ms-perspective:400;perspective:400}
 #background-clouds{-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;-o-transform-style:preserve-3d;-ms-transform-style:preserve-3d;transform-style:preserve-3d;}
 #background-clouds > div{width:256px;height:256px;position:absolute}
+#background-rain{position:absolute;z-index:-1000}

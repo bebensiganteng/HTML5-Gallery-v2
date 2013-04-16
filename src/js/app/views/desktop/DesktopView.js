@@ -80,7 +80,10 @@
 
       DesktopView.prototype.animate = function() {
         if (this.currentPage) {
-          return this.pages[this.currentPage].animate();
+          this.pages[this.currentPage].animate();
+          if (this.currentPage === "THUMBNAILS") {
+            return this.pages.BACKGROUND.animate();
+          }
         }
       };
 

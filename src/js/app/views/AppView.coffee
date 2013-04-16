@@ -29,15 +29,18 @@ define [
         platform        : null
         machine         : null
 
+        subid           :null
+
         initialize: ->
             _.bindAll this, 'render'
 
             @el         = $("#content")
             @json       = json
 
-            @render()
             @initMachine()
+            @render()
 
+            @machine.bind @platform.onStateChange
             $( window ).resize @platform.onResize
             # $( window ).focus @onFocus
             # $( window ).blur @onBlur
@@ -60,9 +63,6 @@ define [
                     thumbnails: ->
                         @THUMBNAILS
 
-            @machine.bind @platform.onStateChange
-
-
         # DOM
 
         render: =>
@@ -72,25 +72,30 @@ define [
                     json: @json
                 .setDesktopInteraction()
             else
-                @platform = new MobileView
+                @platform = new DesktopView
                     el: @el
                     json: @json
                 .setMobileInteraction()
 
-            @animate()
 
         # Centralized requestAnimationFrame, so it wont get stacked
         animate: =>
-            requestAnimationFrame @animate
 
-            if !AppState.isPaused
+            if @subid is "thumbnails" and !AppState.isPaused
                 @platform.animate()
+                requestAnimationFrame @animate
 
         onAssetsLoaded: =>
             @platform.playIntro()
 
         onHashChanged: (subid, id) =>
             @platform.setIds {subid, id}
+
+            @subid = subid
+
+            if @subid is "thumbnails"
+                AppState.isPaused = false
+                @animate()
 
             # for regular site this is not needed
             if @machine.getMachineState().toLowerCase() is subid

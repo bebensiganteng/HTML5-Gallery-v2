@@ -20,8 +20,6 @@ define [
 
             @id = Number(id)
 
-
-
             return """
                 <div id="cloud-#{@id}">
                     <img src="images/bg/cloud.png" width="256" height="256"></div>
@@ -43,7 +41,7 @@ define [
             $.fn.addKeyframe [
 
                 name: """cloudkey-#{@id}"""
-                
+
                 '0%': """
                     opacity: 0;
                     #{browser}transform: translate3d(#{ x }px, #{ y }px, #{ z }px );

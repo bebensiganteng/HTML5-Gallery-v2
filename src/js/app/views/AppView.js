@@ -27,17 +27,20 @@
 
       AppView.prototype.machine = null;
 
+      AppView.prototype.subid = null;
+
       AppView.prototype.initialize = function() {
         _.bindAll(this, 'render');
         this.el = $("#content");
         this.json = json;
-        this.render();
         this.initMachine();
+        this.render();
+        this.machine.bind(this.platform.onStateChange);
         return $(window).resize(this.platform.onResize);
       };
 
       AppView.prototype.initMachine = function() {
-        this.machine = Stately.machine({
+        return this.machine = Stately.machine({
           PRELOADER: {
             thumbnails: function() {
               return this.THUMBNAILS;
@@ -57,28 +60,26 @@
             }
           }
         });
-        return this.machine.bind(this.platform.onStateChange);
       };
 
       AppView.prototype.render = function() {
         if (AppState.isDesktop) {
-          this.platform = new DesktopView({
+          return this.platform = new DesktopView({
             el: this.el,
             json: this.json
           }).setDesktopInteraction();
         } else {
-          this.platform = new MobileView({
+          return this.platform = new DesktopView({
             el: this.el,
             json: this.json
           }).setMobileInteraction();
         }
-        return this.animate();
       };
 
       AppView.prototype.animate = function() {
-        requestAnimationFrame(this.animate);
-        if (!AppState.isPaused) {
-          return this.platform.animate();
+        if (this.subid === "thumbnails" && !AppState.isPaused) {
+          this.platform.animate();
+          return requestAnimationFrame(this.animate);
         }
       };
 
@@ -93,6 +94,11 @@
           subid: subid,
           id: id
         });
+        this.subid = subid;
+        if (this.subid === "thumbnails") {
+          AppState.isPaused = false;
+          this.animate();
+        }
         if (this.machine.getMachineState().toLowerCase() === subid) {
           return this.platform.updatePage();
         } else {

@@ -33,10 +33,10 @@ define [
 
         image           : null
         clicked         : null
+        tagged          : null
 
         initialize: ->
             _.bindAll @, 'render', 'unrender'
-
 
         # photoid, phototitle, thumb, original
         # TODO: load and remove image as it go beyond stage
@@ -47,102 +47,136 @@ define [
             return """
                 <div id='thumbsnails-#{id}'>
                     <div class="thumbsnails-title"><p>#{@obj.phototitle}</p></div>
-                    <a href='./#thumbnails/#{id}' target='_self' title='#{@obj.phototitle}'><img src='#{@obj.thumb}' width='150px' height='150px' /></a>
-                    <div id='thumbsnails-bg'></div>
+                    <div class="thumbnails-arrow"></div>
+                    <a href='./#thumbnails/#{id}' target='_self' title='#{@obj.phototitle}'></a>
+                    <div id='thumbsnails-bg' class='thumbsnails-selected'></div>
                 </div>
             """
 
         onFileLoad: (e) =>
-            #@image = e.result
+
+            $("a", @thumb).append(e.result).transition
+                opacity: 1
+            , 500, "ease-in-out"
+
+            @thumb.hover @onHoverOn, @onHoverOff
+
             @thumb.on "click", (e) =>
+
                 e.preventDefault()
 
                 @clicked = true
+
                 if Number(@title.css("opacity"))
                     @transitionOut()
                 else
                     window.location.href = """./#thumbnails/#{@id}"""
 
-        onFileProgress: =>
+        onHoverOn: (e) =>
+            @animateIn(false, 0) if !@tagged
+
+        onHoverOff: (e) =>
+            @animateOut(500, 0) if !@tagged
 
         setPosition: (initX, endX) =>
 
             @clicked    = false
 
-            @w          = (@width - ThumbView.OBJ_WIDTH) / 2
             @el         = document.getElementById 'thumbsnails-' + @id
             @thumb      = $("""#thumbsnails-#{@id}""")
             @title      = $(".thumbsnails-title", @thumb)
             @bg         = $("#thumbsnails-bg", @thumb)
+            @arrow      = $(".thumbnails-arrow", @thumb)
             @center     = initX
             @initX      = initX + @id * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING)
             @endX       = @initX - endX
-            #console.log @initX, @endX, @center, @id
 
             unless @image?
-                # @preload = new createjs.LoadQueue()
-                # @preload.addEventListener "fileload", @onFileLoad
-                # @preload.addEventListener "fileprogress", @onFileProgress
-                # @preload.setMaxConnections 5
-                # @preload.loadFile @obj.thumb
-                #debug
-                @onFileLoad()
+                @preload = new createjs.LoadQueue(false)
+                @preload.addEventListener "fileload", @onFileLoad
+                @preload.setMaxConnections 1
+                @preload.loadFile @obj.thumb
 
             @x = (if (AppState.isIntro) then @endX else @initX)
 
-        selected: (d = 1.2) =>
-            @bg.addClass "thumbsnails-selected"
+        selected: (d = 1.2, bol = true, tagged = true) =>
 
-            @title.transition
-                opacity: 1
-                y: -90
-                delay: 1500
-            , 500, "easeOutBack", =>
-                @trigger ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END
-                @transitionOut() if @clicked
+            @tagged = tagged
 
-            @bg.transition
-                scale: 1
-                opacity: 1
-                delay: 1500
-            , 500, "easeOutBack"
+
+            @animateIn(bol) if bol
 
             TweenLite.to @, d,
                 onUpdate: @arbitrary
                 x: @center
-                ease: Expo.easeInOut
+                ease: Back.easeOut
+                onComplete: =>
+                    @trigger ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END if !bol
 
         deselected: (id) =>
+
             if @id isnt Number(id)
                 @animateOut() if Number(@title.css("opacity")) is 1
+                @tagged = false
 
-        animateOut: =>
-            @title.transition
+        animateIn: (bol = true, d = 1500) =>
+            #@bg.addClass "thumbsnails-selected"
+
+            @title.stop().transition
+                opacity: 1
+                y: -130
+                delay: d + 100
+            , 500, "easeOutBack", =>
+                @trigger ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END if bol
+                @transitionOut() if @clicked
+
+            @bg.stop().transition
+                scale: 1
+                opacity: 1
+                delay: d
+            , 500, "easeOutBack"
+
+            @arrow.stop().transition
+                y: -80
+                opacity: 1
+                delay: d
+            , 500, "easeOutBack"
+
+        animateOut: (dur = 500, d = 1000) =>
+
+            @title.stop().transition
                 opacity: 0
                 y: 0
-                delay: 1000
-            , 500, "ease-in-out"
+                delay: d
+            , dur, "ease-in-out"
 
-            @bg.transition
+            @arrow.stop().transition
+                y: 0
+                opacity: 0
+                delay: d
+            , dur, "ease-in-out"
+
+            @bg.stop().transition
                 scale: 0
                 opacity: 1
-                delay: 1000
-            , 500, "ease-in-out", ->
-                @.removeClass "thumbsnails-selected"
+                delay: d
+            , dur, "ease-in-out"
 
         # POSITION/ANIMATION
 
         transitionIn: =>
 
         transitionOut: =>
-            @trigger ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, @
-            # console.log "ThumbView.transitionOut"
-            # window.location.href = """./#gallery/#{@id}"""
 
+            @trigger ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, @
+
+            @thumb.transition
+                opacity: 0
+                delay: 2000
+            , 500, "ease-in-out"
 
         getCenterNormal: =>
-            #return Math.abs(@x/@halfWidth)
-            return (Math.abs( @x - @w ) / @w)
+            return (Math.abs( @x - @halfWidth ) / @halfWidth)
 
         getScale: =>
             return @getCenterNormal() * 0.3
@@ -167,15 +201,18 @@ define [
 
         update: (@y, distance = 0, direction = 0, speed = 0 )=>
 
-            # if @initX < @endX and @id is 19
-            #     @trigger "end"
-
             if !@clicked
 
                 @x += direction * (distance + speed)
                 @transform @el, @x, @getY(), @getZ(), 0, 1
 
+            # adds filter?
             #@filter @el, @getCenterNormal() * 100
+
+        onResize: =>
+            super()
+
+            @halfWidth = (@width - ThumbView.OBJ_WIDTH) / 2
 
 
 

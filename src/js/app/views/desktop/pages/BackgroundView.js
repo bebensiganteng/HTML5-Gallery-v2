@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'views/PageView', 'views/desktop/component/CloudView', 'controllers/AppState', 'libs/jquery.keyframes'], function($, _b, _u, PageView, CloudView, AppState, _k) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/jquery.keyframes', 'views/PageView', 'views/desktop/component/CloudView', 'controllers/AppState', 'controllers/RainGenerator'], function($, _b, _u, _k, PageView, CloudView, AppState, RainGenerator) {
     var BackgroundView, _ref;
 
     return BackgroundView = (function(_super) {
@@ -22,12 +22,15 @@
 
       BackgroundView.prototype.numClouds = 50;
 
+      BackgroundView.prototype.rain = null;
+
       BackgroundView.prototype.initialize = function() {
         return _.bindAll(this, 'render', 'unrender');
       };
 
       BackgroundView.prototype.unrender = function() {
-        return this.bg.remove();
+        $(this.rainContainer).hide();
+        return this.cloudContainer.children().remove();
       };
 
       BackgroundView.prototype.render = function(ids) {
@@ -35,10 +38,17 @@
 
         this.ids = ids;
         BackgroundView.__super__.render.call(this, this.ids);
-        $(this.el).append("<div id='background'>                <div id='background-clouds'></div>                <div id='background-rain'></div>            </div>");
-        this.bg = $("#background");
-        this.cloudContainer = $("#background-clouds");
-        this.rainContainer = $("#background-rain");
+        if (this.rain == null) {
+          $(this.el).append("<div id='background'>                    <div id='background-clouds'></div>                    <div id='background-rain'></div>                </div>");
+          this.bg = $("#background");
+          this.cloudContainer = $("#background-clouds");
+          this.rainContainer = $("#background-rain");
+          this.rain = new RainGenerator({
+            el: this.rainContainer
+          });
+        } else {
+          $(this.rainContainer).show();
+        }
         list = [];
         this.clouds = [];
         for (i = _i = 0, _ref1 = this.numClouds; 0 <= _ref1 ? _i <= _ref1 : _i >= _ref1; i = 0 <= _ref1 ? ++_i : --_i) {
@@ -47,7 +57,8 @@
           this.clouds.push(cloud);
         }
         this.cloudContainer.append(list.join(""));
-        return this.onResize();
+        this.onResize();
+        return this.rain.render();
       };
 
       BackgroundView.prototype.onResize = function() {
@@ -60,9 +71,10 @@
           return obj.addKeyframe();
         });
         $.keyframe.generate();
-        return _.each(this.clouds, function(obj) {
+        _.each(this.clouds, function(obj) {
           return obj.playKeyframe();
         });
+        return this.rain.onResize();
       };
 
       BackgroundView.prototype.playIntro = function() {
@@ -70,11 +82,7 @@
       };
 
       BackgroundView.prototype.animate = function() {
-        var _this = this;
-
-        return _.each(this.clouds, function(obj) {
-          return obj.animate();
-        });
+        return this.rain.animate();
       };
 
       return BackgroundView;

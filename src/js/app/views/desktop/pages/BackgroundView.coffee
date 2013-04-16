@@ -2,18 +2,20 @@ define [
     'jquery'
     'libs/backbone'
     'libs/underscore'
+    'libs/jquery.keyframes'
     'views/PageView'
     'views/desktop/component/CloudView'
     'controllers/AppState'
-    'libs/jquery.keyframes'
+    'controllers/RainGenerator'
     ], (
     $
     _b
     _u
+    _k
     PageView
     CloudView
     AppState
-    _k
+    RainGenerator
     ) ->
 
     class BackgroundView extends PageView
@@ -21,25 +23,39 @@ define [
         @INTRO_COMPLETE: 'INTRO_COMPLETE'
 
         numClouds: 50
+        rain : null
 
         initialize: ->
             _.bindAll @, 'render', 'unrender'
 
         unrender: =>
-            @bg.remove()
+            #@rain.unrender()
+            #@bg.remove() if @bg
+
+            $(@rainContainer).hide()
+            @cloudContainer.children().remove()
 
         render: (@ids) =>
 
             super(@ids)
 
-            $(@el).append "<div id='background'>
-                <div id='background-clouds'></div>
-                <div id='background-rain'></div>
-            </div>"
+            unless @rain?
 
-            @bg             = $("#background")
-            @cloudContainer = $("#background-clouds")
-            @rainContainer  = $("#background-rain")
+                $(@el).append "<div id='background'>
+                    <div id='background-clouds'></div>
+                    <div id='background-rain'></div>
+                </div>"
+
+                @bg             = $("#background")
+                @cloudContainer = $("#background-clouds")
+                @rainContainer  = $("#background-rain")
+
+                @rain = new RainGenerator
+                    el: @rainContainer
+
+            else
+
+                $(@rainContainer).show()
 
             list = []
             @clouds = []
@@ -54,6 +70,8 @@ define [
             @cloudContainer.append list.join ""
 
             @onResize()
+
+            @rain.render()
 
 
         onResize: =>
@@ -70,8 +88,10 @@ define [
             _.each @clouds, (obj) =>
                 obj.playKeyframe()
 
+            @rain.onResize()
+
         playIntro: =>
             console.log "BackgroundView.playIntro:", AppState.isIntro
 
         animate: =>
-            _.each @clouds, (obj) => obj.animate()
+            @rain.animate()

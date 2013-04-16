@@ -26,8 +26,8 @@ define [
 
     class ThumbnailsView extends PageView
 
-        acc: .5
-        dec: .2
+        acc: .2
+        dec: .1
 
         outOfBounds: null
         onTween: true
@@ -39,6 +39,7 @@ define [
             @jsonlength = _.size @json
 
         unrender: =>
+
             @th.remove()
 
         render: (@ids) =>
@@ -100,21 +101,10 @@ define [
                     obj.setPosition @initX, @endX
                     obj.on ThumbView.THUMB_UPDATE, @onThumbUpdate
 
-                    # TODO: optimize
-                    # if obj.id is @jsonlength - 1
-                    #     obj.on "end", @endReached
-
                 obj.update @initY
 
-        # endReached: =>
-        #     if !@outOfBounds
-        #         @outOfBounds = true
-
-        #         # TweenLite.to @, 1,
-        #         #     onUpdate: @test
-        #         #     ease: Back.easeOut
-
         onThumbUpdate: (e, sel) =>
+
             switch e
                 when ThumbView.THUMB_SELECTED
 
@@ -128,16 +118,21 @@ define [
                     AppState.isIntro = false if AppState.isIntro
 
                 when ThumbView.THUMB_CLICKED
+
+                    AppState.isPaused = true
+
                     @black.show().transition
                         opacity: 1
-                    , 1000, "ease-in-out"
-                    sel.id
+                    , 1000, "ease-in-out", =>
+                        setTimeout =>
+                            window.location.href = './#gallery/' + sel.id
+                        , 2000
 
         updatePage: =>
 
             _.each @thumb, (obj) => obj.deselected @ids.id
 
-            @thumb[@ids.id].selected(.8)
+            @thumb[@ids.id].selected .8
 
         animate: =>
             if @x0
@@ -147,18 +142,24 @@ define [
                 @speed -= @dec  if distance is 0
                 @speed = 0 if @speed < 0 or @d1 isnt @d0
 
-                # REPAINT?
-                # _.each @thumb, (obj) =>
-                #     obj.update @initY, distance, @d0, @speed 
+                # Slowdown drag if its beyon limit
+                if @thumb[0].x > @thumb[0].initX or @thumb[0].x < @thumb[0].endX
+                    @speed = 0
+                    distance *= 0.1
+
+                # FUCKING REPAINT + REFLOW
+                _.each @thumb, (obj) =>
+                    obj.update @initY, distance, @d0, @speed
 
                 @x0 = @x1
                 @d1 = @d0
 
 
         # DESKTOP
+        #___________________________________________________
 
         onMouseDown: (e) =>
-            if !AppState.isIntro && !@onTween
+            if !AppState.isIntro and !@onTween
                 @drag   = true
                 @x0     = @x1 = e.pageX
                 @speed  = 0
@@ -169,18 +170,34 @@ define [
                 @x1 = e.pageX
 
         onMouseUp: (e) =>
+
             @drag = false
 
+            if @thumb[0].x > @thumb[0].initX
+                @thumb[0].selected .4, false, false
+
+            if @thumb[0].x < @thumb[0].endX
+                @thumb[@jsonlength - 1].selected .4, false, false
+
         # MOBILE
+        #___________________________________________________
 
         onTouchStart: (e) =>
-            
+
+            if !AppState.isIntro and !@onTween
+                @drag   = true
+                @x0     = @x1 = e.pageX
+                @speed  = 0
 
         onTouchMove: (e) =>
-            
+            if @drag
+                @d0 = (if (e.pageX > @x1) then 1 else -1)
+                @x1 = e.pageX
+
+                @animate()
 
         onTouchEnd: (e) =>
-            
+            @drag = false
 
 
 

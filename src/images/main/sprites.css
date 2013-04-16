@@ -5,12 +5,12 @@
         ./sprites/circular.png (238x238)
         ./sprites/katakana.png (112x34)
         ./sprites/About.png (11x82)
-        ./sprites/btn_left_pressed.png (46x46)
-        ./sprites/btn_right_normal.png (46x46)
-        ./sprites/btn_left_normal.png (46x46)
-        ./sprites/btn_right_pressed.png (46x46)
-        ./sprites/btn_up_pressed.png (46x46)
-        ./sprites/btn_up_normal.png (46x46)
+        ./sprites/btn_left_pressed.png (54x54)
+        ./sprites/btn_right_normal.png (54x54)
+        ./sprites/btn_left_normal.png (54x54)
+        ./sprites/btn_right_pressed.png (54x54)
+        ./sprites/btn_up_pressed.png (54x54)
+        ./sprites/btn_up_normal.png (54x54)
         ./sprites/arrowwhite.png (34x22)
 
         Output files:
@@ -18,17 +18,17 @@
           ./sprites.css
 
         Output size:
-          350x238
+          350x292
 
 
 */
 img.circular { width: 238px; height: 238px; background: url(sprites.png) 0px 0px no-repeat; }
 img.katakana { width: 112px; height: 34px; background: url(sprites.png) -238px 0px no-repeat; }
 img.About { width: 11px; height: 82px; background: url(sprites.png) -238px -34px no-repeat; }
-img.btn_left_pressed { width: 46px; height: 46px; background: url(sprites.png) -249px -34px no-repeat; }
-img.btn_right_normal { width: 46px; height: 46px; background: url(sprites.png) -295px -34px no-repeat; }
-img.btn_left_normal { width: 46px; height: 46px; background: url(sprites.png) -238px -116px no-repeat; }
-img.btn_right_pressed { width: 46px; height: 46px; background: url(sprites.png) -284px -116px no-repeat; }
-img.btn_up_pressed { width: 46px; height: 46px; background: url(sprites.png) -238px -162px no-repeat; }
-img.btn_up_normal { width: 46px; height: 46px; background: url(sprites.png) -284px -162px no-repeat; }
-img.arrowwhite { width: 34px; height: 22px; background: url(sprites.png) -249px -80px no-repeat; }
+img.btn_left_pressed { width: 54px; height: 54px; background: url(sprites.png) -249px -34px no-repeat; }
+img.btn_right_normal { width: 54px; height: 54px; background: url(sprites.png) -238px -116px no-repeat; }
+img.btn_left_normal { width: 54px; height: 54px; background: url(sprites.png) -292px -116px no-repeat; }
+img.btn_right_pressed { width: 54px; height: 54px; background: url(sprites.png) -238px -170px no-repeat; }
+img.btn_up_pressed { width: 54px; height: 54px; background: url(sprites.png) -292px -170px no-repeat; }
+img.btn_up_normal { width: 54px; height: 54px; background: url(sprites.png) 0px -238px no-repeat; }
+img.arrowwhite { width: 34px; height: 22px; background: url(sprites.png) -303px -34px no-repeat; }

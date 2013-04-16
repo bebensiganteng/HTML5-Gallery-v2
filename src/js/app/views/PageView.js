@@ -69,9 +69,7 @@
         return (_ref2 = this.pages[newState]) != null ? typeof _ref2.render === "function" ? _ref2.render(this.ids) : void 0 : void 0;
       };
 
-      PageView.prototype.updatePage = function() {
-        return console.log("PageView.updatePage");
-      };
+      PageView.prototype.updatePage = function() {};
 
       PageView.prototype.animate = function() {};
 
@@ -94,6 +92,7 @@
       };
 
       PageView.prototype.setMobileInteraction = function() {
+        console.log("PageView.setMobileInteraction");
         $(document)[0].addEventListener("touchstart", this.onTouchStart, true);
         $(document)[0].addEventListener("touchmove", this.onTouchMove, true);
         $(document)[0].addEventListener("touchend", this.onTouchEnd, true);

@@ -5,6 +5,7 @@
 		background-color black
 		a
 			position absolute
+
 	#gallery-content
 		text-align center
 
@@ -12,29 +13,50 @@
 			width auto
 			height 100%
 
+	#gallery-thumbleft, #gallery-thumbright
+		position absolute
+		margin-top -52px
+		transform scale(.5,.5)
+		opacity 0
+
+		img
+			border-radius (150px/2)
+			border 4px solid white
+
 	a#gallery-left
 
-		width: 46px
-		height: 46px
-		background: url(../images/main/sprites.png) -238px -116px no-repeat
+		width: 54px
+		height: 54px
+		background: url(../images/main/sprites.png) -292px -116px no-repeat
 
 		&:hover
 			background: url(../images/main/sprites.png) -249px -34px no-repeat
 
 	a#gallery-right
 
-		width: 46px
-		height: 46px
-		background: url(../images/main/sprites.png) -295px -34px no-repeat
+		width: 54px
+		height: 54px
+		background: url(../images/main/sprites.png) -238px -116px no-repeat
 
 		&:hover
-			background: url(../images/main/sprites.png) -284px -116px no-repeat
+			background: url(../images/main/sprites.png) -238px -170px no-repeat
 
 	a#gallery-close
 
-		width: 46px
-		height: 46px
-		background: url(../images/main/sprites.png) -284px -162px no-repeat
+		width: 54px
+		height: 54px
+		background: url(../images/main/sprites.png) 0px -238px no-repeat
 
 		&:hover
-			background: url(../images/main/sprites.png) -238px -162px no-repeat
+			background: url(../images/main/sprites.png) -292px -170px no-repeat
+
+
+	#gallery-preload
+		position absolute
+		left 50%
+		top 50%
+		margin -10px 0 0 -100px
+		color white
+		font-size 18px
+		width 200px
+		text-align center

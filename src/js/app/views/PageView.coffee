@@ -54,7 +54,6 @@ define [
 
         # This may not necessary, depending on your site design
         updatePage: =>
-            console.log "PageView.updatePage"
 
         animate: =>
 
@@ -78,6 +77,7 @@ define [
 
         setMobileInteraction: =>
 
+            console.log "PageView.setMobileInteraction"
             $(document)[0].addEventListener "touchstart", @onTouchStart, true
             $(document)[0].addEventListener "touchmove", @onTouchMove, true
             $(document)[0].addEventListener "touchend", @onTouchEnd, true
@@ -103,6 +103,7 @@ define [
         #CSS3
 
         filter: (elem, p) =>
+
             elem.style[AppState.browser + 'filter'] = """grayscale(#{p}%)"""
 
         transform: (elem, x, y, z = 0, r = 0, s = 1) =>
