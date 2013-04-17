@@ -10,24 +10,19 @@
       __extends(ThumbView, _super);
 
       function ThumbView() {
-        this.onResize = __bind(this.onResize, this);
-        this.update = __bind(this.update, this);
         this.follow = __bind(this.follow, this);
-        this.arbitrary = __bind(this.arbitrary, this);
+        this.gotoCenter = __bind(this.gotoCenter, this);
         this.getZ = __bind(this.getZ, this);
         this.getY = __bind(this.getY, this);
         this.getScale = __bind(this.getScale, this);
         this.getCenterNormal = __bind(this.getCenterNormal, this);
-        this.transitionOut = __bind(this.transitionOut, this);
-        this.transitionIn = __bind(this.transitionIn, this);
-        this.animateOut = __bind(this.animateOut, this);
-        this.animateIn = __bind(this.animateIn, this);
-        this.deselected = __bind(this.deselected, this);
-        this.selected = __bind(this.selected, this);
-        this.setPosition = __bind(this.setPosition, this);
+        this.update = __bind(this.update, this);
+        this.hideAll = __bind(this.hideAll, this);
         this.onHoverOff = __bind(this.onHoverOff, this);
         this.onHoverOn = __bind(this.onHoverOn, this);
+        this.setPosition = __bind(this.setPosition, this);
         this.onFileLoad = __bind(this.onFileLoad, this);
+        this.init = __bind(this.init, this);
         this.built = __bind(this.built, this);        _ref = ThumbView.__super__.constructor.apply(this, arguments);
         return _ref;
       }
@@ -44,11 +39,9 @@
 
       ThumbView.OBJ_PADDING = 20;
 
-      ThumbView.prototype.image = null;
+      ThumbView.prototype.clicked = false;
 
-      ThumbView.prototype.clicked = null;
-
-      ThumbView.prototype.tagged = null;
+      ThumbView.prototype.selected = false;
 
       ThumbView.prototype.initialize = function() {
         return _.bindAll(this, 'render', 'unrender');
@@ -57,160 +50,111 @@
       ThumbView.prototype.built = function(obj, id) {
         this.obj = obj;
         this.id = Number(id);
-        return "<div id='thumbsnails-" + id + "'>\n    <div class=\"thumbsnails-title\"><p>" + this.obj.phototitle + "</p></div>\n    <div class=\"thumbnails-arrow\"></div>\n    <a href='./#thumbnails/" + id + "' target='_self' title='" + this.obj.phototitle + "'></a>\n    <div id='thumbsnails-bg' class='thumbsnails-selected'></div>\n</div>";
+        return "<div id='thumbsnails-" + id + "'>\n    <div class=\"thumbsnails-title\"><p>" + this.obj.phototitle + "</p></div>\n    <div class=\"thumbnails-arrow\"></div>\n    <a href='./#thumbnails/" + id + "' target='_self' title='" + this.obj.phototitle + "'></a>\n    <div class='thumbsnails-selected'></div>\n</div>";
+      };
+
+      ThumbView.prototype.init = function() {
+        var name;
+
+        name = "thumbsnails-" + this.id;
+        this.dom = document.getElementById(name);
+        this.thumb = $("#" + name);
+        this.href = $("a", this.thumb);
+        this.title = $(".thumbsnails-title", this.thumb);
+        this.bg = $(".thumbsnails-selected", this.thumb);
+        this.arrow = $(".thumbnails-arrow", this.thumb);
+        this.preload = new createjs.LoadQueue(false);
+        this.preload.addEventListener("fileload", this.onFileLoad);
+        this.preload.setMaxConnections(1);
+        return this.preload.loadFile(this.obj.thumb);
       };
 
       ThumbView.prototype.onFileLoad = function(e) {
         var _this = this;
 
-        $("a", this.thumb).append(e.result).transition({
-          opacity: 1
-        }, 500, "ease-in-out");
-        this.thumb.hover(this.onHoverOn, this.onHoverOff);
-        return this.thumb.on("click", function(e) {
-          e.preventDefault();
+        this.href.append(e.result);
+        this.href.hover(this.onHoverOn, this.onHoverOff);
+        return this.href.on("click", function(e) {
+          e.preventDefault;
           _this.clicked = true;
-          if (Number(_this.title.css("opacity"))) {
-            return _this.transitionOut();
+          if (_this.selected) {
+            return _this.trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, _this);
           } else {
             return window.location.href = "./#thumbnails/" + _this.id;
           }
         });
       };
 
+      ThumbView.prototype.setPosition = function(center, y, endX) {
+        this.center = center;
+        this.y = y;
+        this.initX = this.center + this.id * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING);
+        this.endX = this.initX - endX;
+        this.halfWidth = (this.width - ThumbView.OBJ_WIDTH) / 2;
+        return this.x = this.initX;
+      };
+
       ThumbView.prototype.onHoverOn = function(e) {
-        if (!this.tagged) {
-          return this.animateIn(false, 0);
-        }
+        this.title.stop().transition({
+          opacity: 1,
+          y: -130
+        }, 500, "easeOutBack");
+        this.arrow.stop().transition({
+          y: -80,
+          opacity: 1
+        }, 500, "easeOutBack");
+        return this.bg.stop().transition({
+          scale: 1,
+          opacity: 1
+        }, 500, "easeOutExpo");
       };
 
       ThumbView.prototype.onHoverOff = function(e) {
-        if (!this.tagged) {
-          return this.animateOut(500, 0);
+        if (!this.selected) {
+          return this.hideAll();
         }
       };
 
-      ThumbView.prototype.setPosition = function(initX, endX) {
-        this.clicked = false;
-        this.el = document.getElementById('thumbsnails-' + this.id);
-        this.thumb = $("#thumbsnails-" + this.id);
-        this.title = $(".thumbsnails-title", this.thumb);
-        this.bg = $("#thumbsnails-bg", this.thumb);
-        this.arrow = $(".thumbnails-arrow", this.thumb);
-        this.center = initX;
-        this.initX = initX + this.id * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING);
-        this.endX = this.initX - endX;
-        if (this.image == null) {
-          this.preload = new createjs.LoadQueue(false);
-          this.preload.addEventListener("fileload", this.onFileLoad);
-          this.preload.setMaxConnections(1);
-          this.preload.loadFile(this.obj.thumb);
-        }
-        return this.x = (AppState.isIntro ? this.endX : this.initX);
-      };
-
-      ThumbView.prototype.selected = function(d, bol, tagged) {
-        var _this = this;
-
-        if (d == null) {
-          d = 1.2;
-        }
-        if (bol == null) {
-          bol = true;
-        }
-        if (tagged == null) {
-          tagged = true;
-        }
-        this.tagged = tagged;
-        if (bol) {
-          this.animateIn(bol);
-        }
-        return TweenLite.to(this, d, {
-          onUpdate: this.arbitrary,
-          x: this.center,
-          ease: Back.easeOut,
-          onComplete: function() {
-            if (!bol) {
-              return _this.trigger(ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END);
-            }
-          }
-        });
-      };
-
-      ThumbView.prototype.deselected = function(id) {
-        if (this.id !== Number(id)) {
-          if (Number(this.title.css("opacity")) === 1) {
-            this.animateOut();
-          }
-          return this.tagged = false;
-        }
-      };
-
-      ThumbView.prototype.animateIn = function(bol, d) {
-        var _this = this;
+      ThumbView.prototype.hideAll = function(bol) {
+        var s;
 
         if (bol == null) {
-          bol = true;
+          bol = false;
         }
-        if (d == null) {
-          d = 1500;
-        }
-        this.title.stop().transition({
-          opacity: 1,
-          y: -130,
-          delay: d + 100
-        }, 500, "easeOutBack", function() {
-          if (bol) {
-            _this.trigger(ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END);
-          }
-          if (_this.clicked) {
-            return _this.transitionOut();
-          }
-        });
-        this.bg.stop().transition({
-          scale: 1,
-          opacity: 1,
-          delay: d
-        }, 500, "easeOutBack");
-        return this.arrow.stop().transition({
-          y: -80,
-          opacity: 1,
-          delay: d
-        }, 500, "easeOutBack");
-      };
-
-      ThumbView.prototype.animateOut = function(dur, d) {
-        if (dur == null) {
-          dur = 500;
-        }
-        if (d == null) {
-          d = 1000;
-        }
+        s = (bol ? 200 : 500);
         this.title.stop().transition({
           opacity: 0,
-          y: 0,
-          delay: d
-        }, dur, "ease-in-out");
+          y: 0
+        }, s, "ease-in-out");
         this.arrow.stop().transition({
           y: 0,
-          opacity: 0,
-          delay: d
-        }, dur, "ease-in-out");
-        return this.bg.stop().transition({
-          scale: 0,
-          opacity: 1,
-          delay: d
-        }, dur, "ease-in-out");
+          opacity: 0
+        }, s, "ease-in-out");
+        this.bg.stop().transition({
+          scale: .5,
+          opacity: 0
+        }, s, "ease-in-out");
+        if (bol) {
+          return this.href.stop().transition({
+            scale: .5,
+            opacity: 0,
+            delay: 500
+          }, s, "ease-in-out");
+        }
       };
 
-      ThumbView.prototype.transitionIn = function() {};
-
-      ThumbView.prototype.transitionOut = function() {
-        this.trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, this);
-        return this.thumb.transition({
-          opacity: 0,
-          delay: 2000
-        }, 500, "ease-in-out");
+      ThumbView.prototype.update = function(distance, direction, speed) {
+        if (distance == null) {
+          distance = 0;
+        }
+        if (direction == null) {
+          direction = 0;
+        }
+        if (speed == null) {
+          speed = 0;
+        }
+        this.x += direction * (distance + speed);
+        return this.transform(this.dom, this.x, this.getY(), this.getZ());
       };
 
       ThumbView.prototype.getCenterNormal = function() {
@@ -229,36 +173,43 @@
         return this.getCenterNormal() * -100;
       };
 
-      ThumbView.prototype.arbitrary = function() {
-        this.transform(this.el, this.x, this.getY(), this.getZ(), 0, 1);
-        return this.trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_SELECTED, this);
+      ThumbView.prototype.gotoCenter = function(selected, e) {
+        var d,
+          _this = this;
+
+        this.selected = selected != null ? selected : false;
+        if (e == null) {
+          e = 1;
+        }
+        if (e === 1) {
+          e = Expo.easeInOut;
+          d = 1.2;
+        } else {
+          e = Back.easeOut;
+          d = 0.4;
+        }
+        return TweenLite.to(this, d, {
+          x: this.center,
+          ease: e,
+          onUpdate: function() {
+            _this.update();
+            return _this.trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_SELECTED, _this);
+          },
+          onComplete: function() {
+            if (_this.selected) {
+              _this.onHoverOn();
+            }
+            _this.trigger(ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END);
+            if (_this.clicked) {
+              return _this.trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, _this);
+            }
+          }
+        });
       };
 
       ThumbView.prototype.follow = function(id, posX) {
         this.x = posX + (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING) * (this.id - id);
-        return this.transform(this.el, this.x, this.getY(), this.getZ(), 0, 1);
-      };
-
-      ThumbView.prototype.update = function(y, distance, direction, speed) {
-        this.y = y;
-        if (distance == null) {
-          distance = 0;
-        }
-        if (direction == null) {
-          direction = 0;
-        }
-        if (speed == null) {
-          speed = 0;
-        }
-        if (!this.clicked) {
-          this.x += direction * (distance + speed);
-          return this.transform(this.el, this.x, this.getY(), this.getZ(), 0, 1);
-        }
-      };
-
-      ThumbView.prototype.onResize = function() {
-        ThumbView.__super__.onResize.call(this);
-        return this.halfWidth = (this.width - ThumbView.OBJ_WIDTH) / 2;
+        return this.update();
       };
 
       return ThumbView;

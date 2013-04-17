@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/tweenlite', 'libs/easepack', 'libs/jquery.transit', 'libs/preloadjs', 'controllers/AppState', 'views/PageView', 'views/desktop/component/ThumbView', 'text!templates/desktop/thumbnails.html'], function($, _b, _u, _t, _e, _tr, _p, AppState, PageView, ThumbView, template) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/jquery.transit', 'libs/preloadjs', 'controllers/AppState', 'views/PageView', 'views/desktop/component/ThumbView', 'text!templates/desktop/thumbnails.html'], function($, _b, _u, _tr, _p, AppState, PageView, ThumbView, template) {
     var ThumbnailsView, _ref;
 
     return ThumbnailsView = (function(_super) {
@@ -16,6 +16,9 @@
         this.onMouseUp = __bind(this.onMouseUp, this);
         this.onMouseMove = __bind(this.onMouseMove, this);
         this.onMouseDown = __bind(this.onMouseDown, this);
+        this.snapBack = __bind(this.snapBack, this);
+        this.onDown = __bind(this.onDown, this);
+        this.onMove = __bind(this.onMove, this);
         this.animate = __bind(this.animate, this);
         this.updatePage = __bind(this.updatePage, this);
         this.onThumbUpdate = __bind(this.onThumbUpdate, this);
@@ -28,8 +31,6 @@
       ThumbnailsView.prototype.acc = .2;
 
       ThumbnailsView.prototype.dec = .1;
-
-      ThumbnailsView.prototype.outOfBounds = null;
 
       ThumbnailsView.prototype.onTween = true;
 
@@ -67,7 +68,6 @@
         this.d0 = this.d1 = 0;
         this.x0 = this.x1 = 0;
         this.speed = 0;
-        this.outOfBounds = false;
         this.black = $("#thumbnails-black");
         this.black.hide();
         this.onResize();
@@ -86,16 +86,17 @@
           width: this.width,
           height: this.height
         });
-        this.initX = (this.width - 150) / 2;
+        this.center = (this.width - 150) / 2;
         this.initY = this.height * 0.6;
         this.endX = (this.jsonlength - 1) * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING);
         return _.each(this.thumb, function(obj) {
-          if (obj.initX == null) {
-            obj.onResize();
-            obj.setPosition(_this.initX, _this.endX);
+          obj.onResize();
+          obj.setPosition(_this.center, _this.initY, _this.endX);
+          if (obj.dom == null) {
+            obj.init();
             obj.on(ThumbView.THUMB_UPDATE, _this.onThumbUpdate);
           }
-          return obj.update(_this.initY);
+          return obj.update();
         });
       };
 
@@ -121,9 +122,10 @@
             return this.black.show().transition({
               opacity: 1
             }, 1000, "ease-in-out", function() {
+              sel.hideAll(true);
               return setTimeout(function() {
-                return window.location.href = './#gallery/' + sel.id;
-              }, 2000);
+                return window.location.href = "./#gallery/" + sel.id;
+              }, 1000);
             });
         }
       };
@@ -132,9 +134,12 @@
         var _this = this;
 
         _.each(this.thumb, function(obj) {
-          return obj.deselected(_this.ids.id);
+          if (obj.selected) {
+            obj.selected = false;
+            return obj.onHoverOff();
+          }
         });
-        return this.thumb[this.ids.id].selected(.8);
+        return this.thumb[this.ids.id].gotoCenter(true);
       };
 
       ThumbnailsView.prototype.animate = function() {
@@ -157,39 +162,21 @@
             distance *= 0.1;
           }
           _.each(this.thumb, function(obj) {
-            return obj.update(_this.initY, distance, _this.d0, _this.speed);
+            return obj.update(distance, _this.d0, _this.speed);
           });
           this.x0 = this.x1;
           return this.d1 = this.d0;
         }
       };
 
-      ThumbnailsView.prototype.onMouseDown = function(e) {
-        if (!AppState.isIntro && !this.onTween) {
-          this.drag = true;
-          this.x0 = this.x1 = e.pageX;
-          return this.speed = 0;
-        }
-      };
-
-      ThumbnailsView.prototype.onMouseMove = function(e) {
+      ThumbnailsView.prototype.onMove = function(e) {
         if (this.drag) {
           this.d0 = (e.pageX > this.x1 ? 1 : -1);
           return this.x1 = e.pageX;
         }
       };
 
-      ThumbnailsView.prototype.onMouseUp = function(e) {
-        this.drag = false;
-        if (this.thumb[0].x > this.thumb[0].initX) {
-          this.thumb[0].selected(.4, false, false);
-        }
-        if (this.thumb[0].x < this.thumb[0].endX) {
-          return this.thumb[this.jsonlength - 1].selected(.4, false, false);
-        }
-      };
-
-      ThumbnailsView.prototype.onTouchStart = function(e) {
+      ThumbnailsView.prototype.onDown = function(e) {
         if (!AppState.isIntro && !this.onTween) {
           this.drag = true;
           this.x0 = this.x1 = e.pageX;
@@ -197,16 +184,39 @@
         }
       };
 
-      ThumbnailsView.prototype.onTouchMove = function(e) {
-        if (this.drag) {
-          this.d0 = (e.pageX > this.x1 ? 1 : -1);
-          this.x1 = e.pageX;
-          return this.animate();
+      ThumbnailsView.prototype.snapBack = function() {
+        this.drag = false;
+        if (this.thumb[0].x > this.thumb[0].initX) {
+          this.thumb[0].gotoCenter(false, 0);
+        }
+        if (this.thumb[0].x < this.thumb[0].endX) {
+          return this.thumb[this.jsonlength - 1].gotoCenter(false, 0);
         }
       };
 
+      ThumbnailsView.prototype.onMouseDown = function(e) {
+        return this.onDown(e);
+      };
+
+      ThumbnailsView.prototype.onMouseMove = function(e) {
+        return this.onMove(e);
+      };
+
+      ThumbnailsView.prototype.onMouseUp = function(e) {
+        return this.snapBack();
+      };
+
+      ThumbnailsView.prototype.onTouchStart = function(e) {
+        return this.onDown(e);
+      };
+
+      ThumbnailsView.prototype.onTouchMove = function(e) {
+        this.onMove(e);
+        return this.animate();
+      };
+
       ThumbnailsView.prototype.onTouchEnd = function(e) {
-        return this.drag = false;
+        return this.snapBack();
       };
 
       return ThumbnailsView;

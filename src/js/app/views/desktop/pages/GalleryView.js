@@ -12,6 +12,8 @@
       function GalleryView() {
         this.updatePage = __bind(this.updatePage, this);
         this.removeSelected = __bind(this.removeSelected, this);
+        this.hideUI = __bind(this.hideUI, this);
+        this.showUI = __bind(this.showUI, this);
         this.builtAll = __bind(this.builtAll, this);
         this.builtThumb = __bind(this.builtThumb, this);
         this.onResize = __bind(this.onResize, this);
@@ -32,7 +34,7 @@
         return _ref;
       }
 
-      GalleryView.prototype.tween = false;
+      GalleryView.prototype.loading = false;
 
       GalleryView.prototype.preload = null;
 
@@ -55,7 +57,13 @@
       };
 
       GalleryView.prototype.unrender = function() {
-        return this.gal.remove();
+        return this.gal.stop().transition({
+          opacity: 0,
+          scale: 0.2,
+          delay: 1000
+        }, 500, "ease-in-out", function() {
+          return this.remove();
+        });
       };
 
       GalleryView.prototype.render = function(ids) {
@@ -96,19 +104,19 @@
       GalleryView.prototype.onLeft = function(e) {
         e.preventDefault();
         this.onHoverLeftOff();
-        this.tween = true;
+        this.loading = true;
         return window.location.href = './#gallery/' + this.getPrevious();
       };
 
       GalleryView.prototype.onRight = function(e) {
         e.preventDefault();
         this.onHoverRightOff();
-        this.tween = true;
+        this.loading = true;
         return window.location.href = './#gallery/' + this.getNext();
       };
 
       GalleryView.prototype.onHoverLeftOn = function(e) {
-        if (!this.tween) {
+        if (!this.loading) {
           return this.lthumb.stop().transition({
             scale: 1,
             opacity: 1
@@ -117,7 +125,7 @@
       };
 
       GalleryView.prototype.onHoverLeftOff = function(e) {
-        if (!this.tween) {
+        if (!this.loading) {
           return this.lthumb.stop().transition({
             scale: 0.5,
             opacity: 0,
@@ -127,7 +135,7 @@
       };
 
       GalleryView.prototype.onHoverRightOn = function(e) {
-        if (!this.tween) {
+        if (!this.loading) {
           return this.rthumb.stop().transition({
             scale: 1,
             opacity: 1
@@ -136,7 +144,7 @@
       };
 
       GalleryView.prototype.onHoverRightOff = function(e) {
-        if (!this.tween) {
+        if (!this.loading) {
           return this.rthumb.stop().transition({
             scale: 0.5,
             opacity: 0,
@@ -147,6 +155,7 @@
 
       GalleryView.prototype.onUp = function(e) {
         e.preventDefault();
+        this.hideUI();
         return window.location.href = './#thumbnails/' + this.ids.id;
       };
 
@@ -171,35 +180,48 @@
       };
 
       GalleryView.prototype.onResize = function() {
-        var hcenter, vcenter;
-
         GalleryView.__super__.onResize.call(this);
-        vcenter = (this.height - 54) / 2;
-        hcenter = (this.width - 54) / 2;
+        this.vcenter = (this.height - 54) / 2;
+        this.hcenter = (this.width - 54) / 2;
         this.gal.css({
           width: this.width,
           height: this.height
         });
-        this.right.css({
-          right: "20px",
-          top: vcenter
-        });
-        this.left.css({
-          left: "20px",
-          top: vcenter
-        });
-        this.lthumb.css({
-          left: "80px",
-          top: vcenter
-        });
-        this.rthumb.css({
-          right: "80px",
-          top: vcenter
-        });
-        return this.close.css({
-          left: hcenter,
-          top: "10px"
-        });
+        if (this.loading) {
+          this.right.css({
+            right: "20px",
+            top: this.vcenter
+          });
+          this.left.css({
+            left: "20px",
+            top: this.vcenter
+          });
+          this.lthumb.css({
+            left: "80px",
+            top: this.vcenter
+          });
+          this.rthumb.css({
+            right: "80px",
+            top: this.vcenter
+          });
+          return this.close.css({
+            left: this.hcenter,
+            top: "10px"
+          });
+        } else {
+          this.right.css({
+            right: "-120px",
+            top: this.vcenter
+          });
+          this.left.css({
+            left: "-120px",
+            top: this.vcenter
+          });
+          return this.close.css({
+            left: this.hcenter,
+            top: "-110px"
+          });
+        }
       };
 
       GalleryView.prototype.builtThumb = function(id) {
@@ -215,9 +237,49 @@
         this.content.append(img);
         this.lthumb.append(this.builtThumb(this.getPrevious()));
         this.rthumb.append(this.builtThumb(this.getNext()));
+        this.content.hide();
         return this.content.fadeIn('slow', function() {
-          return _this.tween = false;
+          _this.loading = false;
+          return _this.showUI();
         });
+      };
+
+      GalleryView.prototype.showUI = function() {
+        this.right.stop().transition({
+          right: "20px",
+          top: this.vcenter
+        }, 500, "easeInOutExpo");
+        this.left.stop().transition({
+          left: "20px",
+          top: this.vcenter
+        }, 500, "easeInOutExpo");
+        this.lthumb.stop().transition({
+          left: "80px",
+          top: this.vcenter
+        }, 500, "easeInOutExpo");
+        this.rthumb.stop().transition({
+          right: "80px",
+          top: this.vcenter
+        }, 500, "easeInOutExpo");
+        return this.close.stop().transition({
+          left: this.hcenter,
+          top: "10px"
+        }, 500, "easeInOutExpo");
+      };
+
+      GalleryView.prototype.hideUI = function() {
+        this.right.stop().transition({
+          right: "-120px",
+          top: this.vcenter
+        }, 500, "easeInOutExpo");
+        this.left.stop().transition({
+          left: "-120px",
+          top: this.vcenter
+        }, 500, "easeInOutExpo");
+        return this.close.stop().transition({
+          left: this.hcenter,
+          top: "-110px"
+        }, 500, "easeInOutExpo");
       };
 
       GalleryView.prototype.removeSelected = function() {
@@ -228,6 +290,8 @@
           $(_this.content.children()).remove();
           $(_this.lthumb.children()).remove();
           $(_this.rthumb.children()).remove();
+          _this.loading = true;
+          _this.hideUI();
           return _this.preload.loadFile(_this.collection[_this.ids.id].original);
         });
       };
@@ -238,6 +302,8 @@
           return this.removeSelected();
         } else {
           this.ptext.show();
+          this.loading = true;
+          this.hideUI();
           return this.preload.loadFile(this.collection[this.ids.id].original);
         }
       };

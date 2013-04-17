@@ -3,11 +3,13 @@ define [
     'libs/backbone'
     'libs/pixi'
     'views/PageView'
+    'controllers/appState'
     ], (
     $
     _b
     _p
     PageView
+    AppState
     ) ->
 
     class RainGenerator extends PageView
@@ -33,7 +35,9 @@ define [
 
         onAssetsLoaded: =>
 
-            for i in [0..20]
+            m = (if (not AppState.isTablet and not AppState.isMobile) then 20 else 10)
+
+            for i in [0..m]
                 frameName = @dropFrames[i % 4]
 
                 drop = PIXI.Sprite.fromFrame frameName

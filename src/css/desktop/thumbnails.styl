@@ -7,6 +7,16 @@ center-ring = (150px - 238px) /2
 		position relative
 		perspective 400
 
+		&:hover
+			cursor url(../images/hand.cur), move
+			cursor -webkit-grab
+			cursor -moz-grab
+
+		&:active
+			cursor url(../images/hand-h.cur), move
+			cursor -webkit-grabbing
+			cursor -moz-grabbing
+
 		#thumbnails-group
 			transform-style preserve-3d
 			> div
@@ -14,9 +24,6 @@ center-ring = (150px - 238px) /2
 				width 150px
 				height 150px
 				position absolute
-
-				a
-					opacity 0
 
 				img
 					border-radius (150px/2)
@@ -54,11 +61,15 @@ center-ring = (150px - 238px) /2
 		z-index -10
 
 	.thumbsnails-selected
-		transform scale(0,0)
-		opacity 0
+		transform scale(0.5,0.5)
+		//opacity 0
 		width: 238px
 		height: 238px
 		background: url(../images/main/sprites.png) 0px 0px no-repeat
+		position absolute
+		left center-ring
+		top center-ring
+		z-index -10
 	
 	#thumbnails-black
 		background-color black

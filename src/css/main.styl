@@ -6,30 +6,47 @@ global-reset()
 
 @import '../images/main/sprites'
 
-//@import url(http://fonts.googleapis.com/css?family=Roboto:400,100);
-//@import url("http://fonts.googleapis.com/css?family=Noto+Serif:400italic");
-//@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed)
-//@import url('//fonts.googleapis.com/css?family=Open+Sans:300')
-//@import url("http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300")
-//@import url("http://fonts.googleapis.com/css?family=Droid+Serif")
-//@import url("http://fonts.googleapis.com/css?family=Lobster")
-//@import url("http://fonts.googleapis.com/css?family=The+Girl+Next+Door")
 @import url("http://fonts.googleapis.com/css?family=PT+Sans")
 
 html, body
 	overflow hidden
-	
 
 p
-	//font-family 'Open Sans Condensed', sans-serif
-	//font-family 'Droid Serif', serif
-	//font-family: 'Lobster', cursive
 	font-family: 'PT Sans', sans-serif
 	font-weight: 400
+
+*
+	-webkit-user-select: none
+    -khtml-user-select: none
+    -moz-user-select: none
+    -ms-user-select: none
+    -o-user-select: none
+    user-select: none
+
+
 
 #content
 	background url(../images/bg/sky.jpg) top left no-repeat
 	background-size 100% 100%
+
+#copyright
+	position absolute
+	bottom 10px
+	left 10px
+
+	z-index 1000
+
+	p
+		font-size 10px
+		color white
+		line-height 16px
+
+	a
+		color #f1b9c4
+		text-decoration none
+
+		&:hover
+			border-bottom 1px dotted #f1b9c4
 
 #preloader
 	position: absolute

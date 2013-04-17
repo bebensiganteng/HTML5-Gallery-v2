@@ -5,7 +5,6 @@ define [
     'libs/stately'
     'controllers/AppState'
     'views/desktop/DesktopView'
-    'views/mobile/MobileView'
     #'json!php/json.php' #change this to php when live
     'json!php/temp.json'
     'libs/pixi'
@@ -16,7 +15,6 @@ define [
     Stately
     AppState
     DesktopView
-    MobileView
     json
     pixi
     ) ->

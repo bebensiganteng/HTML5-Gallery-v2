@@ -45,7 +45,6 @@ $.keyframe = {
 	},
 
 	removeHead: function(){
-		console.log("removeHead")
 		$('#keyframes-style').children().remove();
 	},
 };

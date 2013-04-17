@@ -37,6 +37,10 @@
 
       PageView.prototype.height = null;
 
+      PageView.prototype.cssHead = AppState.browser;
+
+      PageView.prototype.has3d = AppState.has3d();
+
       PageView.prototype.initialize = function() {
         return _.bindAll(this, 'render', 'unrender');
       };
@@ -47,12 +51,6 @@
 
       PageView.prototype.render = function(ids) {
         this.ids = ids;
-        $(this.el).css({
-          opacity: 0
-        });
-        return $(this.el).transition({
-          opacity: 1
-        }, 500, 'ease-in-out');
       };
 
       PageView.prototype.onStateChange = function(event, oldState, newState) {
@@ -112,20 +110,18 @@
       PageView.prototype.onTouchEnd = function(e) {};
 
       PageView.prototype.filter = function(elem, p) {
-        return elem.style[AppState.browser + 'filter'] = "grayscale(" + p + "%)";
+        return elem.style[this.cssHead + 'filter'] = "grayscale(" + p + "%)";
       };
 
-      PageView.prototype.transform = function(elem, x, y, z, r, s) {
+      PageView.prototype.transform = function(elem, x, y, z) {
         if (z == null) {
           z = 0;
         }
-        if (r == null) {
-          r = 0;
+        if (this.has3d) {
+          return elem.style[this.cssHead + 'transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)';
+        } else {
+          return elem.style[this.cssHead + 'transform'] = 'translate(' + x + 'px, ' + y + 'px)';
         }
-        if (s == null) {
-          s = 1;
-        }
-        return elem.style[AppState.browser + 'transform'] = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
       };
 
       return PageView;

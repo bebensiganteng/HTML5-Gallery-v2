@@ -54,3 +54,24 @@ define [
         setMobile: =>
             @html.addClass 'mobile'
 
+        # http://stackoverflow.com/questions/5661671/detecting-transform-translate3d-support
+        @has3d: =>
+            el = document.createElement("p")
+            has3d = undefined
+            transforms =
+                webkitTransform: "-webkit-transform"
+                OTransform: "-o-transform"
+                msTransform: "-ms-transform"
+                MozTransform: "-moz-transform"
+                transform: "transform"
+
+            # Add it to the body to get the computed style.
+            document.body.insertBefore el, null
+            for t of transforms
+                if el.style[t] isnt `undefined`
+                    el.style[t] = "translate3d(1px,1px,1px)"
+                    has3d = window.getComputedStyle(el).getPropertyValue(transforms[t])
+
+            document.body.removeChild el
+            return has3d isnt `undefined` and has3d.length > 0 and has3d isnt "none"
+

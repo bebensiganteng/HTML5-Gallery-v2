@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/pixi', 'views/PageView'], function($, _b, _p, PageView) {
+  define(['jquery', 'libs/backbone', 'libs/pixi', 'views/PageView', 'controllers/appState'], function($, _b, _p, PageView, AppState) {
     var RainGenerator, _ref;
 
     return RainGenerator = (function(_super) {
@@ -30,10 +30,11 @@
       };
 
       RainGenerator.prototype.onAssetsLoaded = function() {
-        var drop, frameName, i, _i, _results;
+        var drop, frameName, i, m, _i, _results;
 
+        m = (!AppState.isTablet && !AppState.isMobile ? 20 : 10);
         _results = [];
-        for (i = _i = 0; _i <= 20; i = ++_i) {
+        for (i = _i = 0; 0 <= m ? _i <= m : _i >= m; i = 0 <= m ? ++_i : --_i) {
           frameName = this.dropFrames[i % 4];
           drop = PIXI.Sprite.fromFrame(frameName);
           drop.position.x = Math.random() * this.width - 100;

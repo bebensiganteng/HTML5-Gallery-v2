@@ -20,7 +20,7 @@
 
       BackgroundView.INTRO_COMPLETE = 'INTRO_COMPLETE';
 
-      BackgroundView.prototype.numClouds = 50;
+      BackgroundView.prototype.numClouds = 30;
 
       BackgroundView.prototype.rain = null;
 
@@ -29,8 +29,12 @@
       };
 
       BackgroundView.prototype.unrender = function() {
-        $(this.rainContainer).hide();
-        return this.cloudContainer.children().remove();
+        var _ref1, _ref2;
+
+        if ((_ref1 = $(this.rainContainer)) != null) {
+          _ref1.hide();
+        }
+        return (_ref2 = this.cloudContainer) != null ? _ref2.children().remove() : void 0;
       };
 
       BackgroundView.prototype.render = function(ids) {

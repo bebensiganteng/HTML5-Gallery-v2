@@ -22,7 +22,7 @@ define [
 
         @INTRO_COMPLETE: 'INTRO_COMPLETE'
 
-        numClouds: 50
+        numClouds: 30
         rain : null
 
         initialize: ->
@@ -32,8 +32,8 @@ define [
             #@rain.unrender()
             #@bg.remove() if @bg
 
-            $(@rainContainer).hide()
-            @cloudContainer.children().remove()
+            $(@rainContainer)?.hide()
+            @cloudContainer?.children().remove()
 
         render: (@ids) =>
 

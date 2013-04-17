@@ -23,6 +23,9 @@ define [
         width: null
         height: null
 
+        cssHead: AppState.browser
+        has3d: AppState.has3d()
+
         initialize: ->
             _.bindAll @, 'render', 'unrender'
 
@@ -38,11 +41,6 @@ define [
             #     , 500, 'ease-in-out', -> $(@).remove()
 
         render: (@ids) =>
-            $(@el).css(opacity:0)
-
-            $(@el).transition
-                opacity: 1
-            , 500, 'ease-in-out'
 
         # PUBLIC
 
@@ -104,8 +102,14 @@ define [
 
         filter: (elem, p) =>
 
-            elem.style[AppState.browser + 'filter'] = """grayscale(#{p}%)"""
+            elem.style[@cssHead + 'filter'] = """grayscale(#{p}%)"""
 
-        transform: (elem, x, y, z = 0, r = 0, s = 1) =>
+        transform: (elem, x, y, z = 0) =>
 
-            elem.style[AppState.browser + 'transform'] = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+            #elem.style[@cssHead + 'transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
+
+            if @has3d
+                elem.style[@cssHead + 'transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)'
+            else
+                elem.style[@cssHead + 'transform'] = 'translate(' + x + 'px, ' + y + 'px)'
+            

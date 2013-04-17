@@ -31,9 +31,8 @@ define [
         @OBJ_WIDTH      : 150
         @OBJ_PADDING    : 20
 
-        image           : null
-        clicked         : null
-        tagged          : null
+        clicked         : false
+        selected        : false
 
         initialize: ->
             _.bindAll @, 'render', 'unrender'
@@ -49,131 +48,109 @@ define [
                     <div class="thumbsnails-title"><p>#{@obj.phototitle}</p></div>
                     <div class="thumbnails-arrow"></div>
                     <a href='./#thumbnails/#{id}' target='_self' title='#{@obj.phototitle}'></a>
-                    <div id='thumbsnails-bg' class='thumbsnails-selected'></div>
+                    <div class='thumbsnails-selected'></div>
                 </div>
             """
 
+        init: =>
+
+            name    = """thumbsnails-#{@id}"""
+
+            @dom    = document.getElementById name
+            @thumb  = $("#" + name)
+            @href   = $("a", @thumb)
+            @title  = $(".thumbsnails-title", @thumb)
+            @bg     = $(".thumbsnails-selected", @thumb)
+            @arrow  = $(".thumbnails-arrow", @thumb)
+
+            @preload = new createjs.LoadQueue(false)
+            @preload.addEventListener "fileload", @onFileLoad
+            @preload.setMaxConnections 1
+            @preload.loadFile @obj.thumb
+
         onFileLoad: (e) =>
 
-            $("a", @thumb).append(e.result).transition
-                opacity: 1
-            , 500, "ease-in-out"
+            @href.append e.result
 
-            @thumb.hover @onHoverOn, @onHoverOff
+            @href.hover @onHoverOn, @onHoverOff
 
-            @thumb.on "click", (e) =>
-
-                e.preventDefault()
+            @href.on "click", (e) =>
+                e.preventDefault
 
                 @clicked = true
 
-                if Number(@title.css("opacity"))
-                    @transitionOut()
+                if @selected
+                    @trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, @)
                 else
                     window.location.href = """./#thumbnails/#{@id}"""
 
-        onHoverOn: (e) =>
-            @animateIn(false, 0) if !@tagged
+        setPosition: (@center, @y, endX) =>
 
-        onHoverOff: (e) =>
-            @animateOut(500, 0) if !@tagged
-
-        setPosition: (initX, endX) =>
-
-            @clicked    = false
-
-            @el         = document.getElementById 'thumbsnails-' + @id
-            @thumb      = $("""#thumbsnails-#{@id}""")
-            @title      = $(".thumbsnails-title", @thumb)
-            @bg         = $("#thumbsnails-bg", @thumb)
-            @arrow      = $(".thumbnails-arrow", @thumb)
-            @center     = initX
-            @initX      = initX + @id * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING)
+            @initX      = @center + @id * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING)
             @endX       = @initX - endX
+            @halfWidth  = (@width - ThumbView.OBJ_WIDTH) / 2
 
-            unless @image?
-                @preload = new createjs.LoadQueue(false)
-                @preload.addEventListener "fileload", @onFileLoad
-                @preload.setMaxConnections 1
-                @preload.loadFile @obj.thumb
+            @x          = @initX
 
-            @x = (if (AppState.isIntro) then @endX else @initX)
+        #_________________________________________
 
-        selected: (d = 1.2, bol = true, tagged = true) =>
-
-            @tagged = tagged
-
-
-            @animateIn(bol) if bol
-
-            TweenLite.to @, d,
-                onUpdate: @arbitrary
-                x: @center
-                ease: Back.easeOut
-                onComplete: =>
-                    @trigger ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END if !bol
-
-        deselected: (id) =>
-
-            if @id isnt Number(id)
-                @animateOut() if Number(@title.css("opacity")) is 1
-                @tagged = false
-
-        animateIn: (bol = true, d = 1500) =>
-            #@bg.addClass "thumbsnails-selected"
+        onHoverOn: (e) =>
 
             @title.stop().transition
                 opacity: 1
                 y: -130
-                delay: d + 100
-            , 500, "easeOutBack", =>
-                @trigger ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END if bol
-                @transitionOut() if @clicked
-
-            @bg.stop().transition
-                scale: 1
-                opacity: 1
-                delay: d
             , 500, "easeOutBack"
 
             @arrow.stop().transition
                 y: -80
                 opacity: 1
-                delay: d
             , 500, "easeOutBack"
 
-        animateOut: (dur = 500, d = 1000) =>
+            @bg.stop().transition
+                scale: 1
+                opacity: 1
+            , 500, "easeOutExpo"
+
+        onHoverOff: (e) =>
+
+            @hideAll() if !@selected
+
+        hideAll: (bol = false) =>
+
+            s = (if (bol) then 200 else 500)
 
             @title.stop().transition
                 opacity: 0
                 y: 0
-                delay: d
-            , dur, "ease-in-out"
+            , s, "ease-in-out"
 
             @arrow.stop().transition
                 y: 0
                 opacity: 0
-                delay: d
-            , dur, "ease-in-out"
+            , s, "ease-in-out"
 
             @bg.stop().transition
-                scale: 0
-                opacity: 1
-                delay: d
-            , dur, "ease-in-out"
-
-        # POSITION/ANIMATION
-
-        transitionIn: =>
-
-        transitionOut: =>
-
-            @trigger ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, @
-
-            @thumb.transition
+                scale: .5
                 opacity: 0
-                delay: 2000
-            , 500, "ease-in-out"
+            , s, "ease-in-out"
+
+            if bol
+                @href.stop().transition
+                    scale: .5
+                    opacity: 0
+                    delay: 500
+                , s, "ease-in-out"
+
+        # CALCULATES POS
+        #_________________________________________
+
+        update: (distance = 0, direction = 0, speed = 0 ) =>
+
+            @x += direction * (distance + speed)
+            @transform @dom, @x, @getY(), @getZ()
+
+            #Adds filter?
+            #@filter @el, @getCenterNormal() * 100
 
         getCenterNormal: =>
             return (Math.abs( @x - @halfWidth ) / @halfWidth)
@@ -187,32 +164,33 @@ define [
         getZ: =>
             return @getCenterNormal() * -100
 
-        arbitrary: =>
-            @transform @el, @x, @getY(), @getZ(), 0, 1
+        gotoCenter: (@selected = false, e = 1) =>
 
-            @trigger ThumbView.THUMB_UPDATE, ThumbView.THUMB_SELECTED, @
+            if (e is 1)
+                e = Expo.easeInOut
+                d = 1.2
+            else
+                e = Back.easeOut
+                d = 0.4
+
+            TweenLite.to @, d,
+                x       : @center
+                ease    : e
+                onUpdate: =>
+                    @update()
+                    @trigger ThumbView.THUMB_UPDATE, ThumbView.THUMB_SELECTED, @
+
+                onComplete: =>
+                    @onHoverOn() if @selected
+                    @trigger ThumbView.THUMB_UPDATE, ThumbView.TWEEN_END
+                    @trigger(ThumbView.THUMB_UPDATE, ThumbView.THUMB_CLICKED, @) if @clicked
 
         follow: (id, posX) =>
 
             @x = posX + (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING) * (@id - id)
 
-            @transform @el, @x, @getY(), @getZ(), 0, 1
+            @update()
 
-
-        update: (@y, distance = 0, direction = 0, speed = 0 )=>
-
-            if !@clicked
-
-                @x += direction * (distance + speed)
-                @transform @el, @x, @getY(), @getZ(), 0, 1
-
-            # adds filter?
-            #@filter @el, @getCenterNormal() * 100
-
-        onResize: =>
-            super()
-
-            @halfWidth = (@width - ThumbView.OBJ_WIDTH) / 2
 
 
 

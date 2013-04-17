@@ -2,8 +2,6 @@ define [
     'jquery'
     'libs/backbone'
     'libs/underscore'
-    'libs/tweenlite'
-    'libs/easepack'
     'libs/jquery.transit'
     'libs/preloadjs'
     'controllers/AppState'
@@ -14,8 +12,6 @@ define [
     $
     _b
     _u
-    _t
-    _e
     _tr
     _p
     AppState
@@ -29,7 +25,6 @@ define [
         acc: .2
         dec: .1
 
-        outOfBounds: null
         onTween: true
 
         initialize: ->
@@ -69,7 +64,6 @@ define [
             @d0             = @d1 = 0
             @x0             = @x1 = 0
             @speed          = 0
-            @outOfBounds    = false
             @black          = $("#thumbnails-black")
 
             @black.hide()
@@ -88,20 +82,21 @@ define [
                 width: @width
                 height: @height
 
-            #@initX = 0
-            @initX = (@width - 150)/2
-            @initY = @height * 0.6
-
-            # using tg.width() wasnt accurate
-            @endX = (@jsonlength - 1) * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING)
+            @center = (@width - 150)/2
+            @initY  = @height * 0.6
+            @endX   = (@jsonlength - 1) * (ThumbView.OBJ_WIDTH + ThumbView.OBJ_PADDING)
 
             _.each @thumb, (obj) =>
-                unless obj.initX?
-                    obj.onResize()
-                    obj.setPosition @initX, @endX
+
+                obj.onResize()
+                obj.setPosition @center, @initY, @endX
+
+                unless obj.dom?
+                    obj.init()
                     obj.on ThumbView.THUMB_UPDATE, @onThumbUpdate
 
-                obj.update @initY
+                obj.update()
+
 
         onThumbUpdate: (e, sel) =>
 
@@ -109,12 +104,15 @@ define [
                 when ThumbView.THUMB_SELECTED
 
                     @onTween = true
+
                     _.each @thumb, (obj) =>
                         unless obj.id is sel.id
                             obj.follow sel.id, sel.x
 
                 when ThumbView.TWEEN_END
+
                     @onTween = false
+
                     AppState.isIntro = false if AppState.isIntro
 
                 when ThumbView.THUMB_CLICKED
@@ -124,15 +122,21 @@ define [
                     @black.show().transition
                         opacity: 1
                     , 1000, "ease-in-out", =>
+                        sel.hideAll true
                         setTimeout =>
-                            window.location.href = './#gallery/' + sel.id
-                        , 2000
+                            window.location.href = """./#gallery/#{sel.id}"""
+                        , 1000
 
         updatePage: =>
 
-            _.each @thumb, (obj) => obj.deselected @ids.id
+            _.each @thumb, (obj) =>
 
-            @thumb[@ids.id].selected .8
+                if obj.selected
+
+                    obj.selected = false
+                    obj.onHoverOff()
+
+            @thumb[@ids.id].gotoCenter true
 
         animate: =>
             if @x0
@@ -142,62 +146,62 @@ define [
                 @speed -= @dec  if distance is 0
                 @speed = 0 if @speed < 0 or @d1 isnt @d0
 
-                # Slowdown drag if its beyon limit
+                # Slowdown drag if its beyond limit
                 if @thumb[0].x > @thumb[0].initX or @thumb[0].x < @thumb[0].endX
                     @speed = 0
                     distance *= 0.1
 
                 # FUCKING REPAINT + REFLOW
-                _.each @thumb, (obj) =>
-                    obj.update @initY, distance, @d0, @speed
+                _.each @thumb, (obj) => obj.update distance, @d0, @speed
 
                 @x0 = @x1
                 @d1 = @d0
 
+        # INTERACTION
+        #___________________________________________________
+
+        onMove: (e) =>
+            if @drag
+                @d0 = (if (e.pageX > @x1) then 1 else -1)
+                @x1 = e.pageX
+
+        onDown: (e) =>
+            if !AppState.isIntro and !@onTween
+                @drag   = true
+                @x0     = @x1 = e.pageX
+                @speed  = 0
+
+        snapBack: =>
+            @drag = false
+
+            @thumb[0].gotoCenter(false, 0) if @thumb[0].x > @thumb[0].initX
+            @thumb[@jsonlength - 1].gotoCenter(false, 0) if @thumb[0].x < @thumb[0].endX
 
         # DESKTOP
         #___________________________________________________
 
         onMouseDown: (e) =>
-            if !AppState.isIntro and !@onTween
-                @drag   = true
-                @x0     = @x1 = e.pageX
-                @speed  = 0
+            @onDown(e)
 
         onMouseMove: (e) =>
-            if @drag
-                @d0 = (if (e.pageX > @x1) then 1 else -1)
-                @x1 = e.pageX
+            @onMove(e)
 
         onMouseUp: (e) =>
+            @snapBack()
 
-            @drag = false
-
-            if @thumb[0].x > @thumb[0].initX
-                @thumb[0].selected .4, false, false
-
-            if @thumb[0].x < @thumb[0].endX
-                @thumb[@jsonlength - 1].selected .4, false, false
 
         # MOBILE
         #___________________________________________________
 
         onTouchStart: (e) =>
-
-            if !AppState.isIntro and !@onTween
-                @drag   = true
-                @x0     = @x1 = e.pageX
-                @speed  = 0
+            @onDown(e)
 
         onTouchMove: (e) =>
-            if @drag
-                @d0 = (if (e.pageX > @x1) then 1 else -1)
-                @x1 = e.pageX
-
-                @animate()
+            @onMove(e)
+            @animate()
 
         onTouchEnd: (e) =>
-            @drag = false
+            @snapBack()
 
 
 

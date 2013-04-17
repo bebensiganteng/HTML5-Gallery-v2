@@ -18,7 +18,7 @@ define [
 
     class GalleryView extends PageView
 
-        tween: false
+        loading: false
         preload: null
 
         events:
@@ -37,7 +37,14 @@ define [
                 @collection.push obj
 
         unrender: =>
-            @gal.remove()
+
+            @gal.stop().transition
+                opacity: 0
+                scale: 0.2
+                delay: 1000
+            , 500, "ease-in-out", ->
+                @.remove()
+
 
         render: (@ids) =>
 
@@ -84,25 +91,25 @@ define [
 
             e.preventDefault()
             @onHoverLeftOff()
-            @tween = true
+            @loading = true
             window.location.href = './#gallery/' + @getPrevious()
 
         onRight: (e) =>
 
             e.preventDefault()
             @onHoverRightOff()
-            @tween = true
+            @loading = true
             window.location.href = './#gallery/' + @getNext()
 
         onHoverLeftOn: (e) =>
-            if !@tween
+            if !@loading
                 @lthumb.stop().transition
                     scale: 1
                     opacity: 1
                 , 200, "easeOutExpo"
 
         onHoverLeftOff: (e) =>
-            if !@tween
+            if !@loading
                 @lthumb.stop().transition
                     scale: 0.5
                     opacity: 0
@@ -110,14 +117,14 @@ define [
                 , 100, "ease-in-out"
 
         onHoverRightOn: (e) =>
-            if !@tween
+            if !@loading
                 @rthumb.stop().transition
                     scale: 1
                     opacity: 1
                 , 200, "easeOutExpo"
 
         onHoverRightOff: (e) =>
-            if !@tween
+            if !@loading
                 @rthumb.stop().transition
                     scale: 0.5
                     opacity: 0
@@ -126,6 +133,7 @@ define [
 
         onUp: (e) =>
             e.preventDefault()
+            @hideUI()
             window.location.href = './#thumbnails/' + @ids.id
 
         #_________________________________
@@ -150,43 +158,51 @@ define [
         onResize: =>
             super()
 
-            vcenter = (@height - 54)/2
-            hcenter = (@width - 54)/2
-
+            @vcenter = (@height - 54)/2
+            @hcenter = (@width - 54)/2
 
             @gal.css
                 width: @width
                 height: @height
 
-            @right.css
-                right: "20px"
-                top: vcenter
+            if @loading
 
-            @left.css
-                left: "20px"
-                top: vcenter
+                @right.css
+                    right: "20px"
+                    top: @vcenter
 
-            @lthumb.css
-                left: "80px"
-                top: vcenter
+                @left.css
+                    left: "20px"
+                    top: @vcenter
 
-            @rthumb.css
-                right: "80px"
-                top: vcenter
+                @lthumb.css
+                    left: "80px"
+                    top: @vcenter
 
-            @close.css
-                left: hcenter
-                top: "10px"
+                @rthumb.css
+                    right: "80px"
+                    top: @vcenter
+
+                @close.css
+                    left: @hcenter
+                    top: "10px"
+
+            else
+
+                @right.css
+                    right: "-120px"
+                    top: @vcenter
+
+                @left.css
+                    left: "-120px"
+                    top: @vcenter
+
+                @close.css
+                    left: @hcenter
+                    top: "-110px"
+
 
         #_________________________________
-
-        # # TODO: make it like adidas website
-        # built: =>
-        #     selected    = @collection[@ids.id]
-            
-        #     return """
-        #         <img title='#{selected.phototitle}' src='#{selected.original}' />
-        #     """
 
         builtThumb: (id) =>
 
@@ -201,14 +217,64 @@ define [
             @lthumb.append @builtThumb @getPrevious()
             @rthumb.append @builtThumb @getNext()
 
+            @content.hide()
+
             @content.fadeIn 'slow', =>
-                @tween = false
+                @loading = false
+                @showUI()
             # @content.transition
             #     opacity: 1
             # , 500, 'ease-in-out', =>
             #     @tween = false
 
-            #@tween = false
+            #@loading = false
+
+        # SHOW/HIDE UI
+        #_________________________________
+
+        showUI: =>
+
+            @right.stop().transition
+                right: "20px"
+                top: @vcenter
+            , 500, "easeInOutExpo"
+
+            @left.stop().transition
+                left: "20px"
+                top: @vcenter
+            , 500, "easeInOutExpo"
+
+            @lthumb.stop().transition
+                left: "80px"
+                top: @vcenter
+            , 500, "easeInOutExpo"
+
+            @rthumb.stop().transition
+                right: "80px"
+                top: @vcenter
+            , 500, "easeInOutExpo"
+
+            @close.stop().transition
+                left: @hcenter
+                top: "10px"
+            , 500, "easeInOutExpo"
+
+        hideUI: =>
+
+            @right.stop().transition
+                right: "-120px"
+                top: @vcenter
+            , 500, "easeInOutExpo"
+
+            @left.stop().transition
+                left: "-120px"
+                top: @vcenter
+            , 500, "easeInOutExpo"
+
+            @close.stop().transition
+                left: @hcenter
+                top: "-110px"
+            , 500, "easeInOutExpo"
 
         #_________________________________
 
@@ -222,6 +288,8 @@ define [
                 $(@lthumb.children()).remove()
                 $(@rthumb.children()).remove()
 
+                @loading = true
+                @hideUI()
                 @preload.loadFile @collection[@ids.id].original
 
         updatePage: =>
@@ -234,4 +302,7 @@ define [
             else
 
                 @ptext.show()
+
+                @loading = true
+                @hideUI()
                 @preload.loadFile @collection[@ids.id].original

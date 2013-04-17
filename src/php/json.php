@@ -19,7 +19,7 @@
 	// grab our unique user id from the $result array
 	$nsid = $result["id"];
 
-	$photos = $f->people_getPublicPhotos($nsid, NULL, NULL, 20);
+	$photos = $f->people_getPublicPhotos($nsid, NULL, NULL, 10);
 
 	$total = $photos[photos][total]; // returns how many photos there are in total
 
