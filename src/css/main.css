@@ -9,11 +9,11 @@ a img{border:none}
 #thumbnails-about{width:11px;height:82px;background:url("../images/main/sprites.png") -238px -34px no-repeat}
 @import url("http://fonts.googleapis.com/css?family=PT+Sans");
 html,body{overflow:hidden}
-*{-webkit-user-select:none}
--khtml-user-select: none,-moz-user-select: none,-ms-user-select: none,-o-user-select: none,user-select: none,p{font-family:'PT Sans',sans-serif;font-weight:400}
+p{font-family:'PT Sans',sans-serif;font-weight:400}
+*{-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
 #content{background:url("../images/bg/sky.jpg") top left no-repeat;-webkit-background-size:100% 100%;-moz-background-size:100% 100%;background-size:100% 100%}
-#copyright{position:absolute;bottom:10px;left:10px;z-index:1000;}
-#copyright p{font-size:10px;color:#fff;line-height:16px}
+#copyright{position:absolute;bottom:10px;right:10px;z-index:1000;}
+#copyright p{font-size:10px;color:#fff;line-height:16px;text-align:right}
 #copyright a{color:#f1b9c4;text-decoration:none;}
 #copyright a:hover{border-bottom:1px dotted #f1b9c4}
 #preloader{position:absolute;margin-left:-30px;top:50%;left:50%}

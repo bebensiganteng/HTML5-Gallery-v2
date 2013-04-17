@@ -16,7 +16,7 @@
         'json': 'libs/json',
         'libs/pixi': 'libs/pixi',
         'libs/backbone': 'libs/backbone-min',
-        'libs/underscore': 'libs/underscore-min',
+        'libs/underscore': 'libs/underscore',
         'libs/jquery.transit': 'libs/jquery.transit',
         'libs/stately': 'libs/Stately',
         'libs/preloadjs': 'libs/preloadjs-0.3.0.min',
