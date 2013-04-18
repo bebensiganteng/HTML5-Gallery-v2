@@ -1,4 +1,4 @@
-HTML5 Gallery v2
+Hipster Gallery
 ========================
 
 <b>Technology</b>
@@ -14,3 +14,15 @@ HTML5 Gallery v2
 - https://github.com/GoodBoyDigital/pixi.js
 - https://github.com/GoodBoyDigital/pixi.js
 - https://github.com/bebensiganteng/jQuery-Keyframes
+
+<b>Versions</b>
+
+0.2
+- Fixed some css issues
+- Removed hover for mobile
+- Fixed CSS transform javascript
+- Fixed a few implementations on FF
+- Added version list
+
+0.1
+- First version
