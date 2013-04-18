@@ -17,12 +17,12 @@ Hipster Gallery
 
 <b>Versions</b>
 
-0.2
+0.2 (0.1 2013/04/18)
 - Fixed some css issues
 - Removed hover for mobile
 - Fixed CSS transform javascript
 - Fixed a few implementations on FF
 - Added version list
 
-0.1
+0.1 (0.1 2013/04/17)
 - First version
