@@ -5,6 +5,7 @@ define [
     'libs/jquery.transit'
     #'libs/jquery.lazyload'
     'views/PageView'
+    'controllers/AppState'
     'text!templates/desktop/gallery.html'
     ], (
     $
@@ -13,6 +14,7 @@ define [
     _t
     #_l
     PageView
+    AppState
     template
     ) ->
 
@@ -102,14 +104,15 @@ define [
             window.location.href = './#gallery/' + @getNext()
 
         onHoverLeftOn: (e) =>
-            if !@loading
+
+            if !@loading and AppState.isDesktop
                 @lthumb.stop().transition
                     scale: 1
                     opacity: 1
                 , 200, "easeOutExpo"
 
         onHoverLeftOff: (e) =>
-            if !@loading
+            if !@loading and AppState.isDesktop
                 @lthumb.stop().transition
                     scale: 0.5
                     opacity: 0
@@ -117,14 +120,14 @@ define [
                 , 100, "ease-in-out"
 
         onHoverRightOn: (e) =>
-            if !@loading
+            if !@loading and AppState.isDesktop
                 @rthumb.stop().transition
                     scale: 1
                     opacity: 1
                 , 200, "easeOutExpo"
 
         onHoverRightOff: (e) =>
-            if !@loading
+            if !@loading and AppState.isDesktop
                 @rthumb.stop().transition
                     scale: 0.5
                     opacity: 0

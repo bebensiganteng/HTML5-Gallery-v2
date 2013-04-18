@@ -32,7 +32,7 @@
       RainGenerator.prototype.onAssetsLoaded = function() {
         var drop, frameName, i, m, _i, _results;
 
-        m = (!AppState.isTablet && !AppState.isMobile ? 20 : 10);
+        m = (AppState.isDesktop ? 20 : 10);
         _results = [];
         for (i = _i = 0; 0 <= m ? _i <= m : _i >= m; i = 0 <= m ? ++_i : --_i) {
           frameName = this.dropFrames[i % 4];

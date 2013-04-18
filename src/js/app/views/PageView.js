@@ -37,7 +37,7 @@
 
       PageView.prototype.height = null;
 
-      PageView.prototype.cssHead = AppState.browser;
+      PageView.prototype.cssHead = AppState.getCSSTransform();
 
       PageView.prototype.has3d = AppState.has3d();
 
@@ -90,7 +90,6 @@
       };
 
       PageView.prototype.setMobileInteraction = function() {
-        console.log("PageView.setMobileInteraction");
         $(document)[0].addEventListener("touchstart", this.onTouchStart, true);
         $(document)[0].addEventListener("touchmove", this.onTouchMove, true);
         $(document)[0].addEventListener("touchend", this.onTouchEnd, true);
@@ -110,7 +109,7 @@
       PageView.prototype.onTouchEnd = function(e) {};
 
       PageView.prototype.filter = function(elem, p) {
-        return elem.style[this.cssHead + 'filter'] = "grayscale(" + p + "%)";
+        return elem.style[this.cssHead] = "grayscale(" + p + "%)";
       };
 
       PageView.prototype.transform = function(elem, x, y, z) {
@@ -118,9 +117,9 @@
           z = 0;
         }
         if (this.has3d) {
-          return elem.style[this.cssHead + 'transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)';
+          return elem.style[this.cssHead] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)';
         } else {
-          return elem.style[this.cssHead + 'transform'] = 'translate(' + x + 'px, ' + y + 'px)';
+          return elem.style[this.cssHead] = 'translate(' + x + 'px, ' + y + 'px)';
         }
       };
 

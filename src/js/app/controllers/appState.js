@@ -11,7 +11,7 @@
 
       AppState.isMobile = /iphone|ipod|android|blackberry|opera mini|opera mobi|skyfire|maemo|windows phone|palm|iemobile|symbian|symbianos|fennec/i.test(navigator.userAgent.toLowerCase());
 
-      AppState.isDesktop = false;
+      AppState.isDesktop = !AppState.isTablet && !AppState.isMobile;
 
       AppState.isPaused = false;
 
@@ -21,8 +21,11 @@
 
       function AppState() {
         this.setMobile = __bind(this.setMobile, this);
-        this.setDesktop = __bind(this.setDesktop, this);        AppState.isDesktop = !AppState.isTablet && !AppState.isMobile;
-        this.html = $('html');
+        this.setDesktop = __bind(this.setDesktop, this);        this.html = $('html');
+        if (!AppState.getCSSTransform()) {
+          alert("CSS Transform not supported");
+          return;
+        }
         this.setDesktop();
       }
 
@@ -48,13 +51,25 @@
         };
         document.body.insertBefore(el, null);
         for (t in transforms) {
-          if (el.style[t] !== undefined) {
+          if (el.style[t] !== void 0) {
             el.style[t] = "translate3d(1px,1px,1px)";
             has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
           }
         }
         document.body.removeChild(el);
-        return has3d !== undefined && has3d.length > 0 && has3d !== "none";
+        return has3d !== void 0 && has3d.length > 0 && has3d !== "none";
+      };
+
+      AppState.getCSSTransform = function() {
+        var p, properties;
+
+        properties = ['transform', 'WebkitTransform', 'msTransform', 'MozTransform', 'OTransform'];
+        while (p = properties.shift()) {
+          if (document.getElementById("content").style[p] !== void 0) {
+            return p;
+          }
+        }
+        return false;
       };
 
       return AppState;

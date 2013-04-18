@@ -23,7 +23,7 @@ define [
         width: null
         height: null
 
-        cssHead: AppState.browser
+        cssHead: AppState.getCSSTransform()
         has3d: AppState.has3d()
 
         initialize: ->
@@ -75,7 +75,6 @@ define [
 
         setMobileInteraction: =>
 
-            console.log "PageView.setMobileInteraction"
             $(document)[0].addEventListener "touchstart", @onTouchStart, true
             $(document)[0].addEventListener "touchmove", @onTouchMove, true
             $(document)[0].addEventListener "touchend", @onTouchEnd, true
@@ -102,14 +101,14 @@ define [
 
         filter: (elem, p) =>
 
-            elem.style[@cssHead + 'filter'] = """grayscale(#{p}%)"""
+            elem.style[@cssHead] = """grayscale(#{p}%)"""
 
         transform: (elem, x, y, z = 0) =>
 
             #elem.style[@cssHead + 'transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px) rotate(' + r + 'deg) scale(' + s + ')';
 
             if @has3d
-                elem.style[@cssHead + 'transform'] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)'
+                elem.style[@cssHead] = 'translate3d(' + x + 'px, ' + y + 'px, ' + z + 'px)'
             else
-                elem.style[@cssHead + 'transform'] = 'translate(' + x + 'px, ' + y + 'px)'
+                elem.style[@cssHead] = 'translate(' + x + 'px, ' + y + 'px)'
             

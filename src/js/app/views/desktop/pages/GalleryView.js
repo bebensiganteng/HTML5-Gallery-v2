@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/jquery.transit', 'views/PageView', 'text!templates/desktop/gallery.html'], function($, _b, _u, _t, PageView, template) {
+  define(['jquery', 'libs/backbone', 'libs/underscore', 'libs/jquery.transit', 'views/PageView', 'controllers/AppState', 'text!templates/desktop/gallery.html'], function($, _b, _u, _t, PageView, AppState, template) {
     var GalleryView, _ref;
 
     return GalleryView = (function(_super) {
@@ -116,7 +116,7 @@
       };
 
       GalleryView.prototype.onHoverLeftOn = function(e) {
-        if (!this.loading) {
+        if (!this.loading && AppState.isDesktop) {
           return this.lthumb.stop().transition({
             scale: 1,
             opacity: 1
@@ -125,7 +125,7 @@
       };
 
       GalleryView.prototype.onHoverLeftOff = function(e) {
-        if (!this.loading) {
+        if (!this.loading && AppState.isDesktop) {
           return this.lthumb.stop().transition({
             scale: 0.5,
             opacity: 0,
@@ -135,7 +135,7 @@
       };
 
       GalleryView.prototype.onHoverRightOn = function(e) {
-        if (!this.loading) {
+        if (!this.loading && AppState.isDesktop) {
           return this.rthumb.stop().transition({
             scale: 1,
             opacity: 1
@@ -144,7 +144,7 @@
       };
 
       GalleryView.prototype.onHoverRightOff = function(e) {
-        if (!this.loading) {
+        if (!this.loading && AppState.isDesktop) {
           return this.rthumb.stop().transition({
             scale: 0.5,
             opacity: 0,

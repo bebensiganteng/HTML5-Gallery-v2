@@ -35,7 +35,7 @@ define [
 
         onAssetsLoaded: =>
 
-            m = (if (not AppState.isTablet and not AppState.isMobile) then 20 else 10)
+            m = (if (AppState.isDesktop) then 20 else 10)
 
             for i in [0..m]
                 frameName = @dropFrames[i % 4]

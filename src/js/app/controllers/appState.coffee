@@ -12,7 +12,7 @@ define [
 
         @isTablet       : (/ipad|android 3|sch-i800|playbook|tablet|kindle|gt-p1000|sgh-t849|shw-m180s|a510|a511|a100|dell streak|silk/i.test(navigator.userAgent.toLowerCase()))
         @isMobile       : (/iphone|ipod|android|blackberry|opera mini|opera mobi|skyfire|maemo|windows phone|palm|iemobile|symbian|symbianos|fennec/i.test(navigator.userAgent.toLowerCase()))
-        @isDesktop      : false
+        @isDesktop      : not AppState.isTablet and not AppState.isMobile
 
         @isPaused       : false
         @isIntro        : true
@@ -21,10 +21,12 @@ define [
 
         constructor : ->
 
-            AppState.isDesktop = not AppState.isTablet and not AppState.isMobile
-
             @html = $ 'html'
-            
+
+            if !AppState.getCSSTransform()
+                alert("CSS Transform not supported")
+                return
+
             # @setMobile() if AppState.isMobile or AppState.isTablet
             # @setDesktop() if AppState.isDesktop
 
@@ -68,10 +70,25 @@ define [
             # Add it to the body to get the computed style.
             document.body.insertBefore el, null
             for t of transforms
-                if el.style[t] isnt `undefined`
+                if el.style[t] isnt undefined
                     el.style[t] = "translate3d(1px,1px,1px)"
                     has3d = window.getComputedStyle(el).getPropertyValue(transforms[t])
 
             document.body.removeChild el
-            return has3d isnt `undefined` and has3d.length > 0 and has3d isnt "none"
+            return has3d isnt undefined and has3d.length > 0 and has3d isnt "none"
+
+        @getCSSTransform: =>
+            properties = [
+                'transform',
+                'WebkitTransform'
+                'msTransform'
+                'MozTransform'
+                'OTransform'
+            ]
+
+            while p = properties.shift()
+                if document.getElementById("content").style[p] isnt undefined
+                    return p
+
+            return false
 

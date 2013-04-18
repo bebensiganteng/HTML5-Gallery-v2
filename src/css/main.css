@@ -30,7 +30,7 @@ p{font-family:'PT Sans',sans-serif;font-weight:400}
 .desktop a#gallery-close{width:54px;height:54px;background:url("../images/main/sprites.png") 0 -238px no-repeat;}
 .desktop a#gallery-close:hover{background:url("../images/main/sprites.png") -292px -170px no-repeat}
 .desktop #gallery-preload{position:absolute;left:50%;top:50%;margin:-10px 0 0 -100px;color:#fff;font-size:18px;width:200px;text-align:center}
-.desktop #thumbnails{white-space:nowrap;position:relative;-webkit-perspective:400;-moz-perspective:400;-ms-perspective:400;perspective:400;}
+.desktop #thumbnails{white-space:nowrap;position:relative;-webkit-perspective:400;-moz-perspective:400;-ms-perspective:400;perspective:400;-moz-transform:perspective(400px);}
 .desktop #thumbnails:hover{cursor:url("../images/hand.cur"),move;cursor:-webkit-grab;cursor:-moz-grab}
 .desktop #thumbnails:active{cursor:url("../images/hand-h.cur"),move;cursor:-webkit-grabbing;cursor:-moz-grabbing}
 .desktop #thumbnails #thumbnails-group{-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;-o-transform-style:preserve-3d;-ms-transform-style:preserve-3d;transform-style:preserve-3d;}
@@ -42,10 +42,10 @@ p{font-family:'PT Sans',sans-serif;font-weight:400}
 .desktop #thumbnails-header{position:absolute;top:35px;left:50%;margin-left:-56px}
 .desktop #thumbnails-about{position:absolute;bottom:0;left:50%}
 .desktop #thumbsnails-bg{position:absolute;left:-44px;top:-44px;z-index:-10}
-.desktop .thumbsnails-selected{-webkit-transform:scale(.5,.5);-moz-transform:scale(.5,.5);-o-transform:scale(.5,.5);-ms-transform:scale(.5,.5);transform:scale(.5,.5);width:238px;height:238px;background:url("../images/main/sprites.png") 0 0 no-repeat;position:absolute;left:-44px;top:-44px;z-index:-10}
+.desktop .thumbsnails-selected{-webkit-transform:scale(.5,.5);-moz-transform:scale(.5,.5);-o-transform:scale(.5,.5);-ms-transform:scale(.5,.5);transform:scale(.5,.5);opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";width:238px;height:238px;background:url("../images/main/sprites.png") 0 0 no-repeat;position:absolute;left:-44px;top:-44px;z-index:-10}
 .desktop #thumbnails-black{background-color:#000;position:absolute;-webkit-transform:translateZ(-10px) scale(1.2,1.2);-moz-transform:translateZ(-10px) scale(1.2,1.2);-o-transform:translateZ(-10px) scale(1.2,1.2);-ms-transform:translateZ(-10px) scale(1.2,1.2);transform:translateZ(-10px) scale(1.2,1.2);opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"}
 .desktop .thumbnails-arrow{position:absolute;left:58px;top:0;opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";width:34px;height:22px;background:url("../images/main/sprites.png") -303px -34px no-repeat}
-#background{-webkit-perspective:400;-moz-perspective:400;-ms-perspective:400;perspective:400}
+#background{-webkit-perspective:400;-moz-perspective:400;-ms-perspective:400;perspective:400;-moz-transform:perspective(400px)}
 #background-clouds{-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;-o-transform-style:preserve-3d;-ms-transform-style:preserve-3d;transform-style:preserve-3d;}
 #background-clouds > div{width:256px;height:256px;position:absolute}
 #background-rain{position:absolute;z-index:-1000}
